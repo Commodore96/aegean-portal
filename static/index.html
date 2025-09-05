@@ -5,12 +5,10 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Aegean Tech • Portal</title>
 
-<!-- Minimal, monochrome, professional UI -->
 <style>
 :root{
   --bg:#0b0d12; --fg:#e9edf2; --muted:#a5adbb; --line:#1a2030;
   --panel:#0f131b; --panel2:#0d1118; --chip:#101623;
-  --accent:#ffffff; --ok:#c8f7c5; --warn:#fff3bf; --bad:#ffd6d9;
   --radius:14px; --shadow:0 12px 32px rgba(0,0,0,.35);
 }
 *{box-sizing:border-box} html,body{height:100%} body{margin:0;font:14px/1.5 ui-sans-serif,system-ui,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--fg)}
@@ -25,37 +23,47 @@ aside{background:var(--panel2);border-right:1px solid var(--line);position:stick
 .nav .item.active{outline:2px solid rgba(255,255,255,.35)}
 .nav .item svg{width:18px;height:18px;stroke:#cbd5e1}
 .top{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:rgba(9,11,16,.6);backdrop-filter:saturate(120%) blur(10px);border-bottom:1px solid var(--line)}
-.top .right{display:flex;gap:8px;align-items:center}
 .container{padding:18px;max-width:1300px;margin:0 auto}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin-bottom:14px}
+.headerline{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
 .row{display:flex;gap:12px;flex-wrap:wrap;align-items:stretch}
 .col{flex:1;min-width:280px}
-h2{margin:0 0 10px} h3{margin:0 0 10px;font-size:14px;letter-spacing:.02em;color:#cbd5e1}
 .btn{background:#0f1420;border:1px solid var(--line);color:var(--fg);padding:10px 12px;border-radius:12px;cursor:pointer}
 .btn.small{padding:6px 10px} .btn.ghost{background:transparent}
+.badge{display:inline-flex;gap:6px;align-items:center;border:1px solid var(--line);background:#0e1422;padding:4px 8px;border-radius:999px;font-size:12px}
+.note{color:var(--muted);font-size:12px}
 input,select,textarea{width:100%;background:#0f1420;color:var(--fg);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
 input[type=file]{padding:8px}
-.badge{display:inline-flex;gap:6px;align-items:center;border:1px solid var(--line);background:#0e1422;padding:4px 8px;border-radius:999px;font-size:12px}
-.table{width:100%;border-collapse:collapse}
-.table th,.table td{border-bottom:1px solid var(--line);padding:10px 10px;text-align:left;font-size:13px}
-.table th{font-weight:700;color:#cbd5e1}
-.tools{display:flex;gap:8px;flex-wrap:wrap}
-.list{list-style:none;padding:0;margin:0}
+.toast{position:fixed;right:16px;bottom:16px;background:#0f1420;border:1px solid var(--line);padding:10px 14px;border-radius:12px}
+
+/* Tables: smart, minimal */
+.table{width:100%;border-collapse:separate;border-spacing:0 6px}
+.table thead th{position:sticky;top:0;background:var(--panel);z-index:1;border-bottom:1px solid var(--line);padding:10px;text-align:left;font-size:12px;letter-spacing:.03em;color:#cbd5e1;cursor:pointer}
+.table tbody tr{background:#0e131e;border:1px solid var(--line)}
+.table tbody tr:nth-child(odd){background:#0d121c}
+.table td{padding:10px;font-size:13px}
+.table .actions{display:flex;gap:6px;flex-wrap:wrap}
+
+/* KPI bars */
 .kpiBar{height:10px;background:#0f1420;border:1px solid var(--line);border-radius:999px;overflow:hidden}
 .kpiBar > div{height:100%;background:#d1d5db}
-.kpi{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center}
-.kpi .num{font-weight:800}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.separator{height:1px;background:var(--line);margin:12px 0}
-.hidden{display:none}
-.toast{position:fixed;right:16px;bottom:16px;background:#0f1420;border:1px solid var(--line);padding:10px 14px;border-radius:12px}
-.headerline{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.folderchip{display:inline-flex;align-items:center;gap:6px;padding:4px 8px;border:1px solid var(--line);border-radius:999px;background:#0f1420;font-size:12px;margin:2px}
-.iconbtn{display:inline-flex;align-items:center;gap:6px}
-.iconbtn svg{width:16px;height:16px;stroke:#cbd5e1}
-.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;color:#cbd5e1}
-.note{color:var(--muted);font-size:12px}
+
+/* Modal */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:50}
+.modal.show{display:flex}
+.modal .dialog{width:min(720px,96vw);background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:16px}
+.modal .dialog h3{margin:0 0 10px;font-size:16px}
+.modal .footer{display:flex;gap:10px;justify-content:flex-end;margin-top:12px}
+
+/* Calendar */
+.cal{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+.cal .cal-head{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--line)}
+.cal .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:var(--line)}
+.cal .wd{padding:8px 6px;background:#0e131e;font-size:12px;color:#cbd5e1}
+.cal .cell{min-height:100px;background:#0d121c;padding:8px;position:relative;cursor:pointer}
+.cal .cell .d{font-size:12px;color:#cbd5e1}
+.cal .event{margin-top:6px;padding:4px 6px;border:1px solid var(--line);border-radius:8px;background:#101623;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cal .today{outline:2px solid #cbd5e1}
 </style>
 </head>
 <body>
@@ -73,7 +81,6 @@ input[type=file]{padding:8px}
 
     <nav class="nav">
       <div class="item active" data-tab="dashboard">
-        <!-- dashboard icon -->
         <svg fill="none" viewBox="0 0 24 24"><path d="M3 12h7V3H3v9Zm11 9h7V3h-7v18ZM3 21h7v-7H3v7Z" stroke="currentColor" stroke-width="1.5"/></svg>
         <span>Dashboard</span>
       </div>
@@ -89,6 +96,10 @@ input[type=file]{padding:8px}
         <svg fill="none" viewBox="0 0 24 24"><path d="M4 4h16v6H4zM4 14h16v6H4z" stroke="currentColor" stroke-width="1.5"/></svg>
         <span>Templates</span>
       </div>
+      <div class="item" data-tab="calendar">
+        <svg fill="none" viewBox="0 0 24 24"><path d="M7 3v4m10-4v4M3 9h18M5 21h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2Z" stroke="currentColor" stroke-width="1.5"/></svg>
+        <span>Calendar</span>
+      </div>
       <div class="item" data-tab="reporting">
         <svg fill="none" viewBox="0 0 24 24"><path d="M4 20V4m16 16H4m3-3v-5m6 5V7m6 10v-8" stroke="currentColor" stroke-width="1.5"/></svg>
         <span>Reporting</span>
@@ -103,10 +114,8 @@ input[type=file]{padding:8px}
   <!-- MAIN -->
   <main>
     <div class="top">
-      <div class="headerline">
-        <strong id="title">Dashboard</strong>
-      </div>
-      <div class="right">
+      <strong id="title">Dashboard</strong>
+      <div>
         <span class="note" id="userEmail">Not signed in</span>
         <button id="logoutBtn" class="btn small">Logout</button>
       </div>
@@ -118,7 +127,7 @@ input[type=file]{padding:8px}
       <section id="view-login" class="card">
         <div class="headerline">
           <h2>Sign in</h2>
-          <span class="note">Users are defined in <code class="mono">AEG_USERS</code></span>
+          <span class="note">Users are in <code class="note">AEG_USERS</code></span>
         </div>
         <div class="row">
           <div class="col"><input id="email" placeholder="Email" value="admin@aegeantech.com"/></div>
@@ -132,44 +141,48 @@ input[type=file]{padding:8px}
 
         <!-- DASHBOARD -->
         <section id="tab-dashboard" class="card">
-          <div class="headerline"><h2>Dashboard</h2></div>
-          <div class="grid3">
-            <div class="card">
-              <h3>Clients</h3>
-              <div class="kpi">
-                <span class="note">Total</span>
-                <div class="kpiBar"><div id="kpiClientsBar" style="width:0%"></div></div>
-                <span class="num" id="kpiClients">0</span>
-              </div>
-            </div>
-            <div class="card">
-              <h3>Pipeline (€)</h3>
-              <div class="kpi">
-                <span class="note">Value</span>
-                <div class="kpiBar"><div id="kpiPipelineBar" style="width:0%"></div></div>
-                <span class="num" id="kpiPipeline">0</span>
-              </div>
-            </div>
-            <div class="card">
-              <h3>Proposals</h3>
-              <div class="row">
-                <span class="badge">draft <strong id="kpiDraft">0</strong></span>
-                <span class="badge">sent <strong id="kpiSent">0</strong></span>
-                <span class="badge">won <strong id="kpiWon">0</strong></span>
-                <span class="badge">lost <strong id="kpiLost">0</strong></span>
-              </div>
+          <div class="headerline">
+            <h2>Dashboard</h2>
+            <div class="row">
+              <button class="btn" id="openNewClient">＋ New Client</button>
+              <button class="btn" id="openNewProposal">＋ New Proposal</button>
+              <button class="btn" id="openNewTemplate">↑ Upload Template</button>
+              <button class="btn" id="openNewMeeting">📅 New Meeting</button>
             </div>
           </div>
+
           <div class="row">
             <div class="col card">
+              <h3>KPIs</h3>
+              <div class="row">
+                <div class="col">
+                  <div class="note">Clients</div>
+                  <div class="kpiBar"><div id="kpiClientsBar" style="width:0%"></div></div>
+                  <div id="kpiClients" style="margin-top:6px;font-weight:800">0</div>
+                </div>
+                <div class="col">
+                  <div class="note">Pipeline (€)</div>
+                  <div class="kpiBar"><div id="kpiPipelineBar" style="width:0%"></div></div>
+                  <div id="kpiPipeline" style="margin-top:6px;font-weight:800">0</div>
+                </div>
+                <div class="col">
+                  <div class="row" style="margin-top:8px">
+                    <span class="badge">draft <strong id="kpiDraft">0</strong></span>
+                    <span class="badge">sent <strong id="kpiSent">0</strong></span>
+                    <span class="badge">won <strong id="kpiWon">0</strong></span>
+                    <span class="badge">lost <strong id="kpiLost">0</strong></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col card">
               <h3>Upcoming Meetings</h3>
-              <ul class="list" id="kpiUpcoming"></ul>
-              <div class="note">Create meetings via your backend endpoint <code class="mono">/api/meetings</code>.</div>
+              <ul id="kpiUpcoming" style="padding-left:18px;margin:6px 0 0"></ul>
             </div>
             <div class="col card">
               <h3>Activity Log</h3>
-              <ul class="list" id="activityLog"></ul>
-              <div class="note">Reads from <code class="mono">/api/activities?limit=15</code> (added in backend section below). Falls back silently if missing.</div>
+              <ul id="activityLog" style="padding-left:18px;margin:6px 0 0"></ul>
+              <div class="note">Shows recent actions; requires `/api/activities` (present in your backend).</div>
             </div>
           </div>
         </section>
@@ -178,63 +191,49 @@ input[type=file]{padding:8px}
         <section id="tab-proposals" class="card hidden">
           <div class="headerline">
             <h2>Proposals</h2>
-            <div class="tools">
-              <select id="propFilterStatus"><option value="">All</option><option>draft</option><option>sent</option><option>won</option><option>lost</option></select>
-              <input id="propSearch" placeholder="Search title…"/>
-              <button class="btn" id="propRefresh">Refresh</button>
-            </div>
-          </div>
-
-          <div class="card">
-            <h3>New Proposal</h3>
             <div class="row">
-              <div class="col"><label class="note">Client</label><select id="propClient"></select></div>
-              <div class="col"><label class="note">Title</label><input id="propTitle" placeholder="e.g., Website redesign"/></div>
-              <div class="col"><label class="note">Category</label>
-                <select id="propCategory"><option>Maritime</option><option>Yachting</option><option>Real Estate</option><option>Hospitality</option><option>Public</option><option>Enterprise</option></select>
-              </div>
-              <div class="col"><label class="note">Status</label>
-                <select id="propStatus"><option>draft</option><option>sent</option><option>won</option><option>lost</option></select>
-              </div>
-              <div class="col"><label class="note">Value (€)</label><input id="propValue" type="number" step="0.01"/></div>
-              <div class="col"><label class="note">Due</label><input id="propDue" type="date"/></div>
-              <div class="col"><label class="note">Attach</label><input id="propFile" type="file" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.png,.jpg,.jpeg"/></div>
-              <div class="col" style="align-self:flex-end"><button id="addProposalBtn" class="btn">Add</button></div>
+              <input id="propSearch" placeholder="Search title…"/>
+              <select id="propFilterStatus"><option value="">All</option><option>draft</option><option>sent</option><option>won</option><option>lost</option></select>
+              <button class="btn" id="propRefresh">Refresh</button>
+              <button class="btn" id="openNewProposal2">＋ New</button>
             </div>
           </div>
 
           <div class="card">
             <div class="headerline">
-              <h3>Folders (Library for Proposal Assets)</h3>
-              <div class="tools">
+              <h3>Folders (Assets Library)</h3>
+              <div class="row">
                 <input id="propFolderNew" placeholder="Create folder (e.g., contracts)"/>
                 <button class="btn" id="propFolderAdd">Add Folder</button>
               </div>
             </div>
-            <div id="propFolders" class="tools"></div>
-            <div class="separator"></div>
+            <div id="propFolders" class="row"></div>
+            <div style="height:8px"></div>
             <div class="row">
-              <div class="col">
-                <input id="propAssetFile" type="file" multiple/>
-              </div>
-              <div class="col">
-                <select id="propFolderSel"></select>
-              </div>
-              <div class="col">
-                <button class="btn" id="propAssetUpload">Upload to Folder</button>
-              </div>
+              <div class="col"><input id="propAssetFile" type="file" multiple/></div>
+              <div class="col"><select id="propFolderSel"></select></div>
+              <div class="col"><button class="btn" id="propAssetUpload">Upload to Folder</button></div>
             </div>
-            <div class="separator"></div>
+            <div style="height:8px"></div>
             <table class="table" id="propAssetsTable">
-              <thead><tr><th>ID</th><th>Folder</th><th>Filename</th><th>Size</th><th>Uploaded</th><th></th></tr></thead>
+              <thead><tr><th data-col="id">ID</th><th data-col="folder">Folder</th><th data-col="filename">Filename</th><th data-col="size_bytes">Size</th><th data-col="created_at">Uploaded</th><th></th></tr></thead>
               <tbody></tbody>
             </table>
-            <div class="note">Folder endpoints for proposals are provided in the backend section below.</div>
           </div>
 
           <table class="table" id="proposalsTable">
             <thead>
-              <tr><th>ID</th><th>Client</th><th>Title</th><th>Category</th><th>Status</th><th>€</th><th>Due</th><th>File</th><th></th></tr>
+              <tr>
+                <th data-col="id">ID</th>
+                <th data-col="client_id">Client</th>
+                <th data-col="title">Title</th>
+                <th data-col="category">Category</th>
+                <th data-col="status">Status</th>
+                <th data-col="value_amount">€</th>
+                <th data-col="due_date">Due</th>
+                <th data-col="file">File</th>
+                <th></th>
+              </tr>
             </thead>
             <tbody></tbody>
           </table>
@@ -244,54 +243,40 @@ input[type=file]{padding:8px}
         <section id="tab-clients" class="card hidden">
           <div class="headerline">
             <h2>Clients</h2>
-            <div class="tools">
+            <div class="row">
               <input id="clientSearch" placeholder="Search name/contact…"/>
               <button class="btn" id="clientRefresh">Refresh</button>
-            </div>
-          </div>
-
-          <div class="card">
-            <h3>Add / Edit Client</h3>
-            <div class="row">
-              <div class="col"><label class="note">Name</label><input id="clientName"/></div>
-              <div class="col"><label class="note">Industry</label><input id="clientIndustry"/></div>
-              <div class="col"><label class="note">Contact</label><input id="clientContact"/></div>
-              <div class="col" style="align-self:flex-end">
-                <button class="btn" id="clientAddBtn">Add</button>
-                <button class="btn ghost hidden" id="clientSaveBtn">Save</button>
-                <button class="btn ghost hidden" id="clientCancelBtn">Cancel</button>
-              </div>
+              <button class="btn" id="openNewClient2">＋ New</button>
             </div>
           </div>
 
           <table class="table" id="clientsTable">
-            <thead><tr><th>ID</th><th>Name</th><th>Industry</th><th>Contact</th><th></th></tr></thead>
+            <thead><tr><th data-col="id">ID</th><th data-col="name">Name</th><th data-col="industry">Industry</th><th data-col="contact">Contact</th><th></th></tr></thead>
             <tbody></tbody>
           </table>
 
-          <div class="separator"></div>
+          <div style="height:8px"></div>
           <div class="card">
             <div class="headerline">
               <h3>Client Files & Folders</h3>
-              <div class="tools">
+              <div class="row">
                 <select id="clientSel"></select>
                 <input id="clientFolderNew" placeholder="Create folder (e.g., invoices, media)"/>
                 <button class="btn" id="clientFolderAdd">Add Folder</button>
               </div>
             </div>
-            <div id="clientFolders" class="tools"></div>
-            <div class="separator"></div>
+            <div id="clientFolders" class="row"></div>
+            <div style="height:8px"></div>
             <div class="row">
               <div class="col"><input id="clientFile" type="file" multiple/></div>
               <div class="col"><select id="clientFolderSel"></select></div>
               <div class="col"><button class="btn" id="clientUploadBtn">Upload to Folder</button></div>
             </div>
-            <div class="separator"></div>
+            <div style="height:8px"></div>
             <table class="table" id="clientFilesTable">
-              <thead><tr><th>ID</th><th>Folder</th><th>Filename</th><th>Size</th><th>Uploaded</th><th></th></tr></thead>
+              <thead><tr><th data-col="id">ID</th><th data-col="folder">Folder</th><th data-col="filename">Filename</th><th data-col="size_bytes">Size</th><th data-col="created_at">Uploaded</th><th></th></tr></thead>
               <tbody></tbody>
             </table>
-            <div class="note">Uses <code class="mono">/api/clients/:id/folders</code> and <code class="mono">/api/clients/:id/files</code> (described below).</div>
           </div>
         </section>
 
@@ -299,41 +284,64 @@ input[type=file]{padding:8px}
         <section id="tab-templates" class="card hidden">
           <div class="headerline">
             <h2>Templates Library</h2>
-            <div class="tools">
+            <div class="row">
               <input id="tplSearch" placeholder="Search filename…"/>
               <button class="btn" id="tplRefresh">Refresh</button>
+              <button class="btn" id="openNewTemplate2">↑ Upload</button>
             </div>
           </div>
 
           <div class="card">
             <div class="headerline">
               <h3>Folders</h3>
-              <div class="tools">
+              <div class="row">
                 <input id="tplFolderNew" placeholder="Create folder (e.g., sales, legal)"/>
                 <button class="btn" id="tplFolderAdd">Add Folder</button>
               </div>
             </div>
-            <div id="tplFolders" class="tools"></div>
-            <div class="separator"></div>
+            <div id="tplFolders" class="row"></div>
+            <div style="height:8px"></div>
             <div class="row">
               <div class="col"><input id="tplFile" type="file" multiple/></div>
               <div class="col"><select id="tplFolderSel"></select></div>
               <div class="col"><button class="btn" id="tplUploadBtn">Upload to Folder</button></div>
             </div>
-            <div class="separator"></div>
+            <div style="height:8px"></div>
             <table class="table" id="templatesTable">
-              <thead><tr><th>ID</th><th>Folder</th><th>Filename</th><th>Size</th><th>Uploaded</th><th></th></tr></thead>
+              <thead><tr><th data-col="id">ID</th><th data-col="folder">Folder</th><th data-col="filename">Filename</th><th data-col="size_bytes">Size</th><th data-col="created_at">Uploaded</th><th></th></tr></thead>
               <tbody></tbody>
             </table>
-            <div class="note">Default backend already supports /api/templates (flat). Backend section below adds folders.</div>
           </div>
+        </section>
+
+        <!-- CALENDAR -->
+        <section id="tab-calendar" class="card hidden">
+          <div class="headerline">
+            <h2>Calendar</h2>
+            <div class="row">
+              <button class="btn" id="openNewMeeting2">＋ New Meeting</button>
+              <button class="btn" id="calToday">Today</button>
+            </div>
+          </div>
+
+          <div class="cal">
+            <div class="cal-head">
+              <button class="btn small" id="calPrev">‹</button>
+              <div><strong id="calLabel">Month YYYY</strong></div>
+              <button class="btn small" id="calNext">›</button>
+            </div>
+            <div class="cal-grid" id="calGrid">
+              <!-- Weekday heads -->
+            </div>
+          </div>
+          <div class="note" style="margin-top:8px">Click a day to add a meeting. Meetings come from `/api/meetings`.</div>
         </section>
 
         <!-- REPORTING -->
         <section id="tab-reporting" class="card hidden">
           <div class="headerline"><h2>Reporting</h2></div>
-          <div class="grid2">
-            <div class="card">
+          <div class="row">
+            <div class="col card">
               <h3>Summary</h3>
               <div class="row">
                 <div class="col"><div class="badge">Clients <strong id="rClients">0</strong></div></div>
@@ -344,9 +352,9 @@ input[type=file]{padding:8px}
                 <div class="col"><div class="badge">Lost <strong id="rLost">0</strong></div></div>
               </div>
             </div>
-            <div class="card">
+            <div class="col card">
               <h3>Upcoming meetings</h3>
-              <ul class="list" id="rUpcoming"></ul>
+              <ul id="rUpcoming" style="padding-left:18px;margin:6px 0"></ul>
             </div>
           </div>
         </section>
@@ -354,18 +362,18 @@ input[type=file]{padding:8px}
         <!-- SETTINGS -->
         <section id="tab-settings" class="card hidden">
           <div class="headerline"><h2>Settings</h2></div>
-          <div class="grid2">
-            <div class="card">
+          <div class="row">
+            <div class="col card">
               <h3>Email (SMTP) Test</h3>
               <div class="row">
                 <div class="col"><input id="testEmailTo" placeholder="Send test to"/></div>
                 <div class="col"><button class="btn" id="sendTestEmailBtn">Send</button></div>
               </div>
-              <div class="note">Requires SMTP_* env vars in backend.</div>
+              <div class="note">Requires SMTP_* env vars.</div>
             </div>
-            <div class="card">
+            <div class="col card">
               <h3>About</h3>
-              <p class="note">Minimal monochrome UI. Fully keyboard-friendly. Uploads: PDF, Office docs, images, etc.</p>
+              <p class="note">Minimal monochrome UI with modal forms, sortable tables and calendar.</p>
             </div>
           </div>
         </section>
@@ -375,23 +383,96 @@ input[type=file]{padding:8px}
   </main>
 </div>
 
+<!-- MODALS -->
+<div class="modal" id="modalClient">
+  <div class="dialog">
+    <h3>New Client</h3>
+    <div class="row">
+      <div class="col"><input id="mClientName" placeholder="Name"/></div>
+      <div class="col"><input id="mClientIndustry" placeholder="Industry"/></div>
+      <div class="col"><input id="mClientContact" placeholder="Contact"/></div>
+    </div>
+    <div class="footer">
+      <button class="btn ghost" data-close="#modalClient">Cancel</button>
+      <button class="btn" id="mClientSave">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modalProposal">
+  <div class="dialog">
+    <h3>New Proposal</h3>
+    <div class="row">
+      <div class="col"><select id="mPropClient"></select></div>
+      <div class="col"><input id="mPropTitle" placeholder="Title"/></div>
+      <div class="col">
+        <select id="mPropCategory"><option>Maritime</option><option>Yachting</option><option>Real Estate</option><option>Hospitality</option><option>Public</option><option>Enterprise</option></select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col"><select id="mPropStatus"><option>draft</option><option>sent</option><option>won</option><option>lost</option></select></div>
+      <div class="col"><input id="mPropValue" type="number" step="0.01" placeholder="Value (€)"/></div>
+      <div class="col"><input id="mPropDue" type="date"/></div>
+    </div>
+    <div class="row">
+      <div class="col"><input id="mPropFile" type="file" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.png,.jpg,.jpeg"/></div>
+    </div>
+    <div class="footer">
+      <button class="btn ghost" data-close="#modalProposal">Cancel</button>
+      <button class="btn" id="mPropSave">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modalTemplate">
+  <div class="dialog">
+    <h3>Upload Template</h3>
+    <div class="row">
+      <div class="col"><input id="mTplFile" type="file"/></div>
+      <div class="col"><input id="mTplFolder" placeholder="Folder (default: general)"/></div>
+    </div>
+    <div class="footer">
+      <button class="btn ghost" data-close="#modalTemplate">Cancel</button>
+      <button class="btn" id="mTplSave">Upload</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modalMeeting">
+  <div class="dialog">
+    <h3>New Meeting</h3>
+    <div class="row">
+      <div class="col"><input id="mMeetTitle" placeholder="Title"/></div>
+      <div class="col"><input id="mMeetStart" type="datetime-local"/></div>
+      <div class="col"><input id="mMeetDuration" type="number" min="15" step="15" value="60" placeholder="Duration (min)"/></div>
+    </div>
+    <div class="row">
+      <div class="col"><input id="mMeetLocation" placeholder="Location"/></div>
+      <div class="col"><input id="mMeetParticipants" placeholder="Emails comma-separated"/></div>
+      <div class="col"><input id="mMeetRemind" type="number" min="0" value="30" placeholder="Remind before (min)"/></div>
+    </div>
+    <div class="footer">
+      <button class="btn ghost" data-close="#modalMeeting">Cancel</button>
+      <button class="btn" id="mMeetSave">Save</button>
+    </div>
+  </div>
+</div>
+
 <!-- App JS -->
 <script>
-/* ---------------- Core helpers ---------------- */
 const $ = s => document.querySelector(s);
 const $$ = s => Array.from(document.querySelectorAll(s));
-function toast(msg){ let t=$('.toast'); if(!t){ t=document.createElement('div'); t.className='toast'; document.body.appendChild(t);} t.textContent=msg; t.style.opacity=1; setTimeout(()=>t.style.opacity=0,2000); }
+function toast(msg){ let t=$('.toast'); if(!t){ t=document.createElement('div'); t.className='toast'; document.body.appendChild(t);} t.textContent=msg; t.style.opacity=1; setTimeout(()=>t.style.opacity=0,2200); }
 function bytes(n){ n=Number(n||0); if(n<1024) return n+' B'; if(n<1024*1024) return (n/1024).toFixed(1)+' KB'; if(n<1024*1024*1024) return (n/1024/1024).toFixed(1)+' MB'; return (n/1024/1024/1024).toFixed(1)+' GB'; }
+function fmtDate(d){ return d.toISOString().slice(0,10); }
 
 const state = {
   token: localStorage.getItem('token') || '',
   email: localStorage.getItem('email') || '',
   active: 'dashboard',
-  // caches
   clients: [],
-  propFolders: new Set(['general']),
-  clientFolders: {}, // clientId -> Set
-  tplFolders: new Set(['general']),
+  meetings: [],
+  cal: new Date()
 };
 
 async function api(path, opts={}){
@@ -402,196 +483,218 @@ async function api(path, opts={}){
   return ct.includes('application/json') ? r.json() : r.text();
 }
 
-/* ---------------- Auth ---------------- */
+/* Auth */
 function showApp(){ $('#view-login').classList.add('hidden'); $('#view-app').classList.remove('hidden'); }
 function showLogin(){ $('#view-app').classList.add('hidden'); $('#view-login').classList.remove('hidden'); }
-async function login(){
+$('#loginBtn').onclick = async ()=>{
   const email=$('#email').value.trim(), password=$('#password').value.trim();
   const r = await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password})});
   if(!r.ok){ toast('Login failed'); return; }
   const data = await r.json();
   state.token=data.token; state.email=data.email; localStorage.setItem('token',state.token); localStorage.setItem('email',state.email);
-  $('#userEmail').textContent=state.email; showApp(); setTab('dashboard'); await refreshAll();
-}
+  $('#userEmail').textContent=state.email; showApp(); setTab('dashboard'); refreshAll();
+};
+$('#logoutBtn').onclick = logout;
 function logout(){ localStorage.removeItem('token'); localStorage.removeItem('email'); state.token=''; state.email=''; $('#userEmail').textContent='Not signed in'; showLogin(); }
-$('#loginBtn').onclick = login; $('#logoutBtn').onclick = logout;
 
-/* ---------------- Tabs ---------------- */
+/* Tabs */
 function setTab(id){
   state.active=id;
   $('#title').textContent = id.charAt(0).toUpperCase()+id.slice(1);
-  $$('#view-app > section').forEach(s=>s.classList.toggle('hidden', s.id!==`tab-${id}`));
-  $$('.nav .item').forEach(i=>i.classList.toggle('active', i.dataset.tab===id));
+  $$('#view-app > section').forEach(s=> s.classList.toggle('hidden', s.id!==`tab-${id}`));
+  $$('.nav .item').forEach(i=> i.classList.toggle('active', i.dataset.tab===id));
+  if(id==='calendar'){ renderCalendar(); }
 }
 $$('.nav .item').forEach(i=> i.onclick = ()=> setTab(i.dataset.tab));
 
-/* ---------------- Dashboard ---------------- */
+/* Dashboard & Reporting */
 async function refreshKPIs(){
   const k = await api('/api/reporting/kpis');
-  // KPIs
   $('#kpiClients').textContent = k.clients;
   $('#kpiPipeline').textContent = k.pipeline_value;
   $('#kpiDraft').textContent = k.proposals.draft;
   $('#kpiSent').textContent  = k.proposals.sent;
   $('#kpiWon').textContent   = k.proposals.won;
   $('#kpiLost').textContent  = k.proposals.lost;
-  // Bars (normalize to a visually pleasant width)
   $('#kpiClientsBar').style.width = Math.min(100, (k.clients||0)*10)+'%';
   $('#kpiPipelineBar').style.width = Math.min(100, (k.pipeline_value||0)/1000)+'%';
-  // Meetings
   $('#kpiUpcoming').innerHTML = (k.upcoming_meetings||[]).map(m=>`<li><strong>${m.title}</strong> — ${m.start_at}${m.location?(' • '+m.location):''}</li>`).join('');
-  // Activity log (optional endpoint)
+  $('#rClients').textContent = k.clients;
+  $('#rPipeline').textContent = k.pipeline_value;
+  $('#rDraft').textContent = k.proposals.draft; $('#rSent').textContent = k.proposals.sent; $('#rWon').textContent = k.proposals.won; $('#rLost').textContent = k.proposals.lost;
+  $('#rUpcoming').innerHTML = $('#kpiUpcoming').innerHTML;
   try{
     const acts = await api('/api/activities?limit=15');
-    $('#activityLog').innerHTML = (acts||[]).map(a=>`<li><span class="mono">${(a.created_at||'').slice(0,19).replace('T',' ')}</span> — <strong>${a.actor||'system'}</strong> ${a.action} <span class="note">(${a.entity}${a.entity_id?(' #'+a.entity_id):''})</span></li>`).join('');
+    $('#activityLog').innerHTML = (acts||[]).map(a=>`<li><span class="note">${(a.created_at||'').slice(0,19).replace('T',' ')}</span> — <strong>${a.actor||'system'}</strong> ${a.action} <span class="note">(${a.entity}${a.entity_id?(' #'+a.entity_id):''})</span></li>`).join('');
   }catch(e){ $('#activityLog').innerHTML = '<li class="note">No activity API yet</li>'; }
 }
 
-/* ---------------- Clients ---------------- */
+/* Helpers: Table sorting */
+function makeSortable(tableSelector){
+  const table = $(tableSelector); if(!table) return;
+  const ths = table.querySelectorAll('thead th[data-col]');
+  let sortKey=null, sortDir=1;
+  ths.forEach(th=>{
+    th.onclick = ()=>{
+      const key = th.dataset.col;
+      sortDir = (sortKey===key) ? -sortDir : 1;
+      sortKey = key;
+      const rows = Array.from(table.querySelectorAll('tbody tr'));
+      rows.sort((a,b)=>{
+        const va = a.querySelector(`[data-col="${key}"]`)?.textContent || a.children[Array.from(ths).indexOf(th)].textContent;
+        const vb = b.querySelector(`[data-col="${key}"]`)?.textContent || b.children[Array.from(ths).indexOf(th)].textContent;
+        const na = parseFloat(va.replace(/[^\d.-]/g,'')); const nb = parseFloat(vb.replace(/[^\d.-]/g,''));
+        if(!Number.isNaN(na) && !Number.isNaN(nb)) return (na-nb)*sortDir;
+        return va.localeCompare(vb)*sortDir;
+      });
+      const tb = table.querySelector('tbody'); tb.innerHTML=''; rows.forEach(r=>tb.appendChild(r));
+    };
+  });
+}
+
+/* Clients */
 async function loadClients(){
   const rows = await api('/api/clients');
   state.clients = rows || [];
-  $('#clientsTable tbody').innerHTML = state.clients.map(r=>`
+  // Filter
+  const q = ($('#clientSearch').value||'').toLowerCase();
+  const data = q ? state.clients.filter(c=>(c.name||'').toLowerCase().includes(q) || (c.contact||'').toLowerCase().includes(q)) : state.clients;
+  $('#clientsTable tbody').innerHTML = data.map(r=>`
     <tr>
-      <td>${r.id}</td><td>${r.name||''}</td><td>${r.industry||''}</td><td>${r.contact||''}</td>
-      <td>
-        <button class="btn small iconbtn" data-edit="${r.id}"><svg viewBox="0 0 24 24" fill="none"><path d="M4 20h16M14 4l6 6-10 10H4v-6L14 4Z" stroke="currentColor"/></svg> Edit</button>
-        <button class="btn small iconbtn" data-del="${r.id}"><svg viewBox="0 0 24 24" fill="none"><path d="M4 7h16M7 7v12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V7M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2" stroke="currentColor"/></svg> Delete</button>
+      <td data-col="id">${r.id}</td>
+      <td data-col="name">${r.name||''}</td>
+      <td data-col="industry">${r.industry||''}</td>
+      <td data-col="contact">${r.contact||''}</td>
+      <td class="actions">
+        <button class="btn small" data-edit="${r.id}">Edit</button>
+        <button class="btn small" data-del="${r.id}">Delete</button>
       </td>
     </tr>`).join('');
-  // Bind
-  $$('#clientsTable [data-del]').forEach(b=> b.onclick = async ()=>{
-    if(!confirm('Delete client?')) return;
-    await api('/api/clients/'+b.dataset.del,{method:'DELETE'}); loadClients(); refreshKPIs();
-  });
+  makeSortable('#clientsTable');
+  // bindings
+  $$('#clientsTable [data-del]').forEach(b=> b.onclick = async ()=>{ if(!confirm('Delete client?'))return; await api('/api/clients/'+b.dataset.del,{method:'DELETE'}); await loadClients(); await refreshKPIs(); });
   $$('#clientsTable [data-edit]').forEach(b=> b.onclick = ()=>{
     const c = state.clients.find(x=>x.id==b.dataset.edit);
-    $('#clientName').value = c.name||''; $('#clientIndustry').value = c.industry||''; $('#clientContact').value = c.contact||'';
-    $('#clientAddBtn').classList.add('hidden'); $('#clientSaveBtn').classList.remove('hidden'); $('#clientCancelBtn').classList.remove('hidden');
-    $('#clientSaveBtn').dataset.id = c.id;
+    openModal('#modalClient');
+    $('#mClientName').value=c.name||''; $('#mClientIndustry').value=c.industry||''; $('#mClientContact').value=c.contact||'';
+    $('#mClientSave').dataset.id = c.id;
   });
-  // client selector for files
+  // selector for file manager
   $('#clientSel').innerHTML = state.clients.map(c=>`<option value="${c.id}">${c.id} — ${c.name}</option>`).join('');
 }
-$('#clientAddBtn').onclick = async ()=>{
-  const name=$('#clientName').value.trim();
-  const industry=$('#clientIndustry').value.trim();
-  const contact=$('#clientContact').value.trim();
-  if(!name) return toast('Name required');
-  await api('/api/clients',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,industry,contact})});
-  $('#clientName').value=''; $('#clientIndustry').value=''; $('#clientContact').value='';
-  loadClients(); refreshKPIs();
-};
-$('#clientSaveBtn').onclick = async (e)=>{
-  const id=e.target.dataset.id;
-  const name=$('#clientName').value.trim();
-  const industry=$('#clientIndustry').value.trim();
-  const contact=$('#clientContact').value.trim();
-  await api('/api/clients/'+id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,industry,contact})});
-  $('#clientAddBtn').classList.remove('hidden'); $('#clientSaveBtn').classList.add('hidden'); $('#clientCancelBtn').classList.add('hidden');
-  $('#clientName').value=''; $('#clientIndustry').value=''; $('#clientContact').value='';
-  loadClients();
-};
-$('#clientCancelBtn').onclick = ()=>{
-  $('#clientAddBtn').classList.remove('hidden'); $('#clientSaveBtn').classList.add('hidden'); $('#clientCancelBtn').classList.add('hidden');
-  $('#clientName').value=''; $('#clientIndustry').value=''; $('#clientContact').value='';
-};
+$('#clientSearch').oninput = loadClients;
+$('#clientRefresh').onclick = loadClients;
 
-/* Client folders & files */
 async function refreshClientFolders(){
   const id = $('#clientSel').value;
   try{
     const folders = await api(`/api/clients/${id}/folders`);
-    state.clientFolders[id] = new Set(folders && folders.length ? folders : ['general']);
-  }catch(e){
-    state.clientFolders[id] = new Set(['general']); // fallback
-  }
-  const arr = Array.from(state.clientFolders[id]);
-  $('#clientFolders').innerHTML = arr.map(f=>`<span class="folderchip">${f}</span>`).join('');
+    state.clientFolders = new Set(folders && folders.length ? folders : ['general']);
+  }catch{ state.clientFolders = new Set(['general']); }
+  const arr = Array.from(state.clientFolders);
+  $('#clientFolders').innerHTML = arr.map(f=>`<span class="badge">${f}</span>`).join(' ');
   $('#clientFolderSel').innerHTML = arr.map(f=>`<option>${f}</option>`).join('');
 }
 $('#clientFolderAdd').onclick = ()=>{
   const v = $('#clientFolderNew').value.trim(); if(!v) return;
-  const id = $('#clientSel').value;
-  if(!state.clientFolders[id]) state.clientFolders[id]=new Set(['general']);
-  state.clientFolders[id].add(v);
-  $('#clientFolderNew').value='';
-  refreshClientFolders();
+  state.clientFolders.add(v); $('#clientFolderNew').value=''; refreshClientFolders();
 };
 $('#clientUploadBtn').onclick = async ()=>{
-  const id = $('#clientSel').value;
-  const folder = $('#clientFolderSel').value || 'general';
-  const files = $('#clientFile').files;
+  const id=$('#clientSel').value, folder=$('#clientFolderSel').value||'general', files=$('#clientFile').files;
   if(!files.length) return toast('Choose files');
   for(const f of files){
     const fd=new FormData(); fd.append('file', f); fd.append('folder', folder);
     const r = await fetch(`/api/clients/${id}/files`,{method:'POST',headers:{'Authorization':'Bearer '+state.token},body:fd});
-    if(!r.ok) { toast('Upload failed for '+f.name); return; }
+    if(!r.ok) return toast('Upload failed: '+f.name);
   }
-  toast('Uploaded'); $('#clientFile').value=''; loadClientFiles();
+  $('#clientFile').value=''; await loadClientFiles();
 };
 async function loadClientFiles(){
   const id = $('#clientSel').value;
   const rows = await api(`/api/clients/${id}/files`);
   $('#clientFilesTable tbody').innerHTML = (rows||[]).map(r=>`
     <tr>
-      <td>${r.id}</td><td>${r.folder||'general'}</td><td>${r.filename}</td><td>${bytes(r.size_bytes)}</td>
-      <td>${(r.created_at||'').slice(0,19).replace('T',' ')}</td>
-      <td>
+      <td data-col="id">${r.id}</td>
+      <td data-col="folder">${r.folder||'general'}</td>
+      <td data-col="filename">${r.filename}</td>
+      <td data-col="size_bytes">${bytes(r.size_bytes)}</td>
+      <td data-col="created_at">${(r.created_at||'').slice(0,19).replace('T',' ')}</td>
+      <td class="actions">
         <a class="btn small" href="/api/files/download/${r.id}" target="_blank">Download</a>
         <button class="btn small" data-del="${r.id}">Delete</button>
       </td>
     </tr>`).join('');
-  $$('#clientFilesTable [data-del]').forEach(b=> b.onclick = async ()=>{
-    await api('/api/files/'+b.dataset.del,{method:'DELETE'}); loadClientFiles();
-  });
+  makeSortable('#clientFilesTable');
+  $$('#clientFilesTable [data-del]').forEach(b=> b.onclick = async ()=>{ await api('/api/files/'+b.dataset.del,{method:'DELETE'}); loadClientFiles(); });
 }
 $('#clientSel').onchange = ()=>{ refreshClientFolders(); loadClientFiles(); };
 
-/* ---------------- Proposals ---------------- */
+/* Client modal */
+function openModal(sel){ $(sel).classList.add('show'); }
+function closeModal(sel){ $(sel).classList.remove('show'); }
+$$('[data-close]').forEach(btn=> btn.onclick = ()=> closeModal(btn.getAttribute('data-close')) );
+
+$('#openNewClient,#openNewClient2').forEach ? null : null;
+$('#openNewClient').onclick = ()=>{ delete $('#mClientSave').dataset.id; $('#mClientName').value=''; $('#mClientIndustry').value=''; $('#mClientContact').value=''; openModal('#modalClient'); };
+$('#openNewClient2').onclick = $('#openNewClient').onclick;
+
+$('#mClientSave').onclick = async (e)=>{
+  const id = e.target.dataset.id;
+  const name=$('#mClientName').value.trim(), industry=$('#mClientIndustry').value.trim(), contact=$('#mClientContact').value.trim();
+  if(!name) return toast('Name required');
+  if(id){
+    await api('/api/clients/'+id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,industry,contact})});
+  }else{
+    await api('/api/clients',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,industry,contact})});
+  }
+  closeModal('#modalClient'); await loadClients(); await refreshKPIs();
+};
+
+/* Proposals */
+async function loadClientsIntoProposal(){
+  const data = state.clients.length? state.clients : await api('/api/clients');
+  state.clients = data;
+  $('#mPropClient').innerHTML = (data||[]).map(c=>`<option value="${c.id}">${c.id} — ${c.name}</option>`).join('');
+}
 async function renderProposals(){
   let rows = await api('/api/proposals');
-  // search and filter client-side
   const q = ($('#propSearch').value||'').toLowerCase();
   const st = $('#propFilterStatus').value||'';
   if(q) rows = rows.filter(p=>(p.title||'').toLowerCase().includes(q));
   if(st) rows = rows.filter(p=>p.status===st);
   $('#proposalsTable tbody').innerHTML = (rows||[]).map(p=>`
     <tr>
-      <td>${p.id}</td><td>${p.client_id}</td><td>${p.title}</td>
-      <td>${p.category}</td><td>${p.status}</td>
-      <td>${Number(p.value_amount||0).toFixed(2)}</td><td>${p.due_date||''}</td>
+      <td data-col="id">${p.id}</td>
+      <td data-col="client_id">${p.client_id}</td>
+      <td data-col="title">${p.title}</td>
+      <td data-col="category">${p.category}</td>
+      <td data-col="status">${p.status}</td>
+      <td data-col="value_amount">${Number(p.value_amount||0).toFixed(2)}</td>
+      <td data-col="due_date">${p.due_date||''}</td>
       <td>${p.file_id?`<a href="/api/proposals/download/${p.id}" target="_blank">Download</a>`:''}</td>
-      <td><button class="btn small" data-del="${p.id}">Delete</button></td>
+      <td class="actions"><button class="btn small" data-del="${p.id}">Delete</button></td>
     </tr>`).join('');
-  $$('#proposalsTable [data-del]').forEach(b=> b.onclick = async ()=>{
-    if(!confirm('Delete proposal?')) return;
-    await api('/api/proposals/'+b.dataset.del,{method:'DELETE'}); renderProposals(); refreshKPIs();
-  });
+  makeSortable('#proposalsTable');
+  $$('#proposalsTable [data-del]').forEach(b=> b.onclick = async ()=>{ if(!confirm('Delete proposal?'))return; await api('/api/proposals/'+b.dataset.del,{method:'DELETE'}); renderProposals(); refreshKPIs(); });
 }
 $('#propRefresh').onclick = renderProposals;
 $('#propSearch').oninput = renderProposals;
 $('#propFilterStatus').onchange = renderProposals;
+$('#openNewProposal,#openNewProposal2').forEach ? null : null;
+$('#openNewProposal').onclick = async ()=>{ await loadClientsIntoProposal(); $('#mPropTitle').value=''; $('#mPropValue').value=''; $('#mPropDue').value=''; $('#mPropFile').value=''; openModal('#modalProposal'); };
+$('#openNewProposal2').onclick = $('#openNewProposal').onclick;
 
-async function loadClientsIntoProposals(){
-  const data = state.clients.length? state.clients : await api('/api/clients');
-  state.clients = data;
-  $('#propClient').innerHTML = (data||[]).map(c=>`<option value="${c.id}">${c.id} — ${c.name}</option>`).join('');
-}
-$('#addProposalBtn').onclick = async ()=>{
-  const client_id=$('#propClient').value, title=$('#propTitle').value.trim();
-  const category=$('#propCategory').value, status=$('#propStatus').value;
-  const value_amount=$('#propValue').value, due_date=$('#propDue').value || null;
+$('#mPropSave').onclick = async ()=>{
+  const client_id=$('#mPropClient').value, title=$('#mPropTitle').value.trim();
+  const category=$('#mPropCategory').value, status=$('#mPropStatus').value;
+  const value_amount=$('#mPropValue').value, due_date=$('#mPropDue').value || null;
   if(!client_id || !title) return toast('Client & Title required');
-  const f = $('#propFile').files[0];
+  const f = $('#mPropFile').files[0];
   if(f){
     const form=new FormData();
-    form.append('client_id', client_id);
-    form.append('title', title);
-    form.append('category', category);
-    form.append('status', status);
-    form.append('value_amount', value_amount);
-    form.append('currency', 'EUR');
+    form.append('client_id', client_id); form.append('title', title);
+    form.append('category', category); form.append('status', status);
+    form.append('value_amount', value_amount); form.append('currency', 'EUR');
     if(due_date) form.append('due_date', due_date);
     form.append('file', f);
     const r = await fetch('/api/proposals',{method:'POST',headers:{'Authorization':'Bearer '+state.token},body:form});
@@ -599,33 +702,31 @@ $('#addProposalBtn').onclick = async ()=>{
   } else {
     await api('/api/proposals',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({client_id,title,category,status,value_amount,currency:'EUR',due_date})});
   }
-  $('#propTitle').value=''; $('#propValue').value=''; $('#propDue').value=''; $('#propFile').value='';
-  renderProposals(); refreshKPIs();
+  closeModal('#modalProposal'); renderProposals(); refreshKPIs();
 };
 
-/* Proposal folders & assets (requires backend add-ons below) */
-function _renderFolderChips(el, arr){ el.innerHTML = arr.map(f=>`<span class="folderchip">${f}</span>`).join(''); }
+/* Proposal assets folders */
+function chipList(el, arr){ el.innerHTML = arr.map(f=>`<span class="badge">${f}</span>`).join(' '); }
 async function loadProposalFolders(){
   try{
     const folders = await api('/api/proposals/folders');
     state.propFolders = new Set(folders && folders.length? folders : ['general']);
-  }catch(e){ state.propFolders = new Set(['general']); }
-  const arr = Array.from(state.propFolders);
-  _renderFolderChips($('#propFolders'), arr);
-  $('#propFolderSel').innerHTML = arr.map(f=>`<option>${f}</option>`).join('');
+  }catch{ state.propFolders = new Set(['general']); }
+  const a = Array.from(state.propFolders);
+  chipList($('#propFolders'), a);
+  $('#propFolderSel').innerHTML = a.map(f=>`<option>${f}</option>`).join('');
 }
 $('#propFolderAdd').onclick = ()=>{
   const v = ($('#propFolderNew').value||'').trim(); if(!v) return;
-  state.propFolders.add(v); $('#propFolderNew').value=''; loadProposalFolders(); // optimistic
+  state.propFolders.add(v); $('#propFolderNew').value=''; loadProposalFolders();
 };
 $('#propAssetUpload').onclick = async ()=>{
-  const folder = $('#propFolderSel').value || 'general';
-  const files = $('#propAssetFile').files;
+  const folder=$('#propFolderSel').value||'general', files=$('#propAssetFile').files;
   if(!files.length) return toast('Choose files');
   for(const f of files){
-    const fd = new FormData(); fd.append('file', f); fd.append('folder', folder);
+    const fd=new FormData(); fd.append('file', f); fd.append('folder', folder);
     const r = await fetch('/api/proposals/assets',{method:'POST',headers:{'Authorization':'Bearer '+state.token},body:fd});
-    if(!r.ok){ toast('Upload failed: '+f.name); return; }
+    if(!r.ok) return toast('Upload failed: '+f.name);
   }
   $('#propAssetFile').value=''; loadProposalAssets();
 };
@@ -634,77 +735,159 @@ async function loadProposalAssets(){
     const rows = await api('/api/proposals/assets');
     $('#propAssetsTable tbody').innerHTML = (rows||[]).map(r=>`
       <tr>
-        <td>${r.id}</td><td>${r.folder||'general'}</td><td>${r.filename}</td><td>${bytes(r.size_bytes)}</td>
-        <td>${(r.created_at||'').slice(0,19).replace('T',' ')}</td>
-        <td><a class="btn small" href="/api/files/download/${r.id}" target="_blank">Download</a></td>
+        <td data-col="id">${r.id}</td>
+        <td data-col="folder">${r.folder||'general'}</td>
+        <td data-col="filename">${r.filename}</td>
+        <td data-col="size_bytes">${bytes(r.size_bytes)}</td>
+        <td data-col="created_at">${(r.created_at||'').slice(0,19).replace('T',' ')}</td>
+        <td class="actions"><a class="btn small" href="/api/files/download/${r.id}" target="_blank">Download</a></td>
       </tr>`).join('');
-  }catch(e){
-    $('#propAssetsTable tbody').innerHTML = `<tr><td colspan="6" class="note">Proposal assets API not available yet</td></tr>`;
-  }
+    makeSortable('#propAssetsTable');
+  }catch{ $('#propAssetsTable tbody').innerHTML = `<tr><td colspan="6" class="note">Proposal assets API not available yet</td></tr>`; }
 }
 
-/* ---------------- Templates (with folders) ---------------- */
+/* Templates with modal upload */
+$('#openNewTemplate,#openNewTemplate2').forEach ? null : null;
+$('#openNewTemplate').onclick = ()=>{ $('#mTplFile').value=''; $('#mTplFolder').value=''; openModal('#modalTemplate'); };
+$('#openNewTemplate2').onclick = $('#openNewTemplate').onclick;
+
 async function loadTemplateFolders(){
   try{
     const folders = await api('/api/templates/folders');
     state.tplFolders = new Set(folders && folders.length? folders : ['general']);
-  }catch(e){ state.tplFolders = new Set(['general']); }
-  const arr = Array.from(state.tplFolders);
-  _renderFolderChips($('#tplFolders'), arr);
-  $('#tplFolderSel').innerHTML = arr.map(f=>`<option>${f}</option>`).join('');
+  }catch{ state.tplFolders = new Set(['general']); }
+  const a = Array.from(state.tplFolders);
+  chipList($('#tplFolders'), a);
+  $('#tplFolderSel').innerHTML = a.map(f=>`<option>${f}</option>`).join('');
 }
 $('#tplFolderAdd').onclick = ()=>{
   const v = ($('#tplFolderNew').value||'').trim(); if(!v) return;
-  state.tplFolders.add(v); $('#tplFolderNew').value=''; loadTemplateFolders(); // optimistic
+  state.tplFolders.add(v); $('#tplFolderNew').value=''; loadTemplateFolders();
+};
+$('#mTplSave').onclick = async ()=>{
+  const f = $('#mTplFile').files[0]; if(!f) return toast('Choose a file');
+  const folder = ($('#mTplFolder').value||'general').trim();
+  const fd=new FormData(); fd.append('file', f); fd.append('folder', folder);
+  let r = await fetch('/api/templates/upload2',{method:'POST',headers:{'Authorization':'Bearer '+state.token},body:fd});
+  if(!r.ok){ // fallback
+    const fd2=new FormData(); fd2.append('file', f);
+    r = await fetch('/api/templates/upload',{method:'POST',headers:{'Authorization':'Bearer '+state.token},body:fd2});
+    if(!r.ok) return toast('Upload failed');
+  }
+  closeModal('#modalTemplate'); renderTemplates();
 };
 $('#tplUploadBtn').onclick = async ()=>{
-  const folder = $('#tplFolderSel').value || 'general';
-  const files = $('#tplFile').files; if(!files.length) return toast('Choose files');
+  const files=$('#tplFile').files; if(!files.length) return toast('Choose files');
+  const folder=$('#tplFolderSel').value||'general';
   for(const f of files){
-    // backend enhancement adds /api/templates/upload2 supporting folder
     const fd=new FormData(); fd.append('file', f); fd.append('folder', folder);
     let r = await fetch('/api/templates/upload2',{method:'POST',headers:{'Authorization':'Bearer '+state.token},body:fd});
-    if(!r.ok){
-      // fallback to existing flat endpoint if new one missing
-      const fd2=new FormData(); fd2.append('file', f);
-      r = await fetch('/api/templates/upload',{method:'POST',headers:{'Authorization':'Bearer '+state.token},body:fd2});
-      if(!r.ok){ toast('Upload failed: '+f.name); return; }
-    }
+    if(!r.ok){ const fd2=new FormData(); fd2.append('file', f); r = await fetch('/api/templates/upload',{method:'POST',headers:{'Authorization':'Bearer '+state.token},body:fd2}); if(!r.ok) return toast('Upload failed: '+f.name); }
   }
   $('#tplFile').value=''; renderTemplates();
 };
 async function renderTemplates(){
-  // try folder-aware list first
-  let rows=null;
-  try{ rows = await api('/api/templates/list2'); }catch(e){}
+  let rows=null; try{ rows = await api('/api/templates/list2'); }catch(e){}
   if(!rows){ rows = await api('/api/templates'); }
+  const q = ($('#tplSearch').value||'').toLowerCase();
+  if(q) rows = rows.filter(x=>(x.filename||'').toLowerCase().includes(q));
   $('#templatesTable tbody').innerHTML = (rows||[]).map(r=>`
     <tr>
-      <td>${r.id}</td><td>${(r.folder||'general')}</td><td>${r.filename}</td><td>${bytes(r.size_bytes)}</td>
-      <td>${(r.created_at||'').slice(0,19).replace('T',' ')}</td>
-      <td><a class="btn small" href="/api/templates/download/${r.id}" target="_blank">Download</a></td>
+      <td data-col="id">${r.id}</td>
+      <td data-col="folder">${r.folder||'general'}</td>
+      <td data-col="filename">${r.filename}</td>
+      <td data-col="size_bytes">${bytes(r.size_bytes)}</td>
+      <td data-col="created_at">${(r.created_at||'').slice(0,19).replace('T',' ')}</td>
+      <td class="actions"><a class="btn small" href="/api/templates/download/${r.id}" target="_blank">Download</a></td>
     </tr>`).join('');
+  makeSortable('#templatesTable');
 }
+$('#tplSearch').oninput = renderTemplates;
+$('#tplRefresh').onclick = renderTemplates;
 
-/* ---------------- Settings ---------------- */
+/* Calendar */
+function startOfMonth(d){ return new Date(d.getFullYear(), d.getMonth(), 1); }
+function endOfMonth(d){ return new Date(d.getFullYear(), d.getMonth()+1, 0); }
+function sameDay(a,b){ return a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate(); }
+async function fetchMeetings(){ state.meetings = await api('/api/meetings'); }
+function renderCalendar(){
+  const base = new Date(state.cal.getFullYear(), state.cal.getMonth(), 1);
+  const s = startOfMonth(base); const e = endOfMonth(base);
+  const firstWeekday = (s.getDay()+6)%7; // Mon=0
+  $('#calLabel').textContent = base.toLocaleString('default',{month:'long', year:'numeric'});
+  const grid = $('#calGrid'); grid.innerHTML='';
+  const weekdays = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  weekdays.forEach(w=>{ const h=document.createElement('div'); h.className='wd'; h.textContent=w; grid.appendChild(h); });
+  // blanks
+  for(let i=0;i<firstWeekday;i++){ const c=document.createElement('div'); c.className='cell'; c.style.background='transparent'; c.style.cursor='default'; grid.appendChild(c); }
+  const today = new Date();
+  for(let day=1; day<=e.getDate(); day++){
+    const d = new Date(base.getFullYear(), base.getMonth(), day);
+    const c = document.createElement('div'); c.className='cell';
+    if(sameDay(d,today)) c.classList.add('today');
+    const label = document.createElement('div'); label.className='d'; label.textContent=String(day); c.appendChild(label);
+    // events
+    (state.meetings||[]).forEach(m=>{
+      const md = new Date(m.start_at);
+      if(sameDay(d, md)){
+        const ev = document.createElement('div'); ev.className='event'; ev.title = m.title;
+        ev.textContent = m.title;
+        c.appendChild(ev);
+      }
+    });
+    c.onclick = ()=>{
+      // preset modal datetime to clicked day, 10:00
+      const pad=x=>String(x).padStart(2,'0');
+      $('#mMeetTitle').value='';
+      const local = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 10, 0, 0);
+      const localISO = local.toISOString().slice(0,16);
+      $('#mMeetStart').value = localISO;
+      $('#mMeetDuration').value = 60;
+      $('#mMeetLocation').value = '';
+      $('#mMeetParticipants').value = '';
+      $('#mMeetRemind').value = 30;
+      openModal('#modalMeeting');
+    };
+    grid.appendChild(c);
+  }
+}
+$('#calPrev').onclick = ()=>{ state.cal.setMonth(state.cal.getMonth()-1); renderCalendar(); };
+$('#calNext').onclick = ()=>{ state.cal.setMonth(state.cal.getMonth()+1); renderCalendar(); };
+$('#calToday').onclick= ()=>{ state.cal = new Date(); renderCalendar(); };
+$('#openNewMeeting,#openNewMeeting2').forEach ? null : null;
+$('#openNewMeeting').onclick = ()=>{ $('#mMeetTitle').value=''; $('#mMeetStart').value=''; $('#mMeetDuration').value=60; $('#mMeetLocation').value=''; $('#mMeetParticipants').value=''; $('#mMeetRemind').value=30; openModal('#modalMeeting'); };
+$('#openNewMeeting2').onclick = $('#openNewMeeting').onclick;
+$('#mMeetSave').onclick = async ()=>{
+  const title=$('#mMeetTitle').value.trim(), startLocal=$('#mMeetStart').value, duration_min=Number($('#mMeetDuration').value||60);
+  const location=$('#mMeetLocation').value.trim(), participants=$('#mMeetParticipants').value.trim(), remind_before_min=Number($('#mMeetRemind').value||30);
+  if(!title || !startLocal || !participants) return toast('Title, Start, Participants required');
+  // Convert local datetime-local to ISO UTC
+  const start = new Date(startLocal); const iso = new Date(start.getTime()-start.getTimezoneOffset()*60000).toISOString().replace('.000','');
+  await api('/api/meetings',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({title,start_at:iso,duration_min,location,participants,remind_before_min})});
+  closeModal('#modalMeeting'); await fetchMeetings(); renderCalendar(); await refreshKPIs();
+};
+
+/* Settings */
 $('#sendTestEmailBtn').onclick = async ()=>{
   const to = ($('#testEmailTo').value||'').trim() || state.email;
   const r = await api('/api/email/test',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to})});
-  toast((r.ok?'Sent':'Failed') + (r.msg?(' • '+r.msg):''));
-};
+  toast((r.ok?'Sent':'Failed') + (r.msg?(' • '+r.msg):'')); };
 
-/* ---------------- App boot ---------------- */
+/* Proposal assets rendering hookup */
+$('#propFolderNew').onkeyup = (e)=>{ if(e.key==='Enter') $('#propFolderAdd').click(); };
+
+/* Initial boot */
 async function refreshAll(){
   await refreshKPIs();
   await loadClients();
-  await loadClientsIntoProposals();
+  $('#clientSel').dispatchEvent(new Event('change'));
   await renderProposals();
   await loadProposalFolders();
   await loadProposalAssets();
   await loadTemplateFolders();
   await renderTemplates();
-  await refreshClientFolders();
-  await loadClientFiles();
+  await fetchMeetings();
+  if(state.active==='calendar') renderCalendar();
 }
 (function init(){
   if(state.token){
