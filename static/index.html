@@ -13,57 +13,78 @@
 }
 *{box-sizing:border-box} html,body{height:100%} body{margin:0;font:14px/1.5 ui-sans-serif,system-ui,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--fg)}
 a{color:inherit;text-decoration:none} ::selection{background:#334155}
+.hidden{display:none!important}
+
+/* Layout */
 .layout{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
 aside{background:var(--panel2);border-right:1px solid var(--line);position:sticky;top:0;height:100vh;padding:18px 12px}
 .brand{display:flex;gap:12px;align-items:center;margin:6px 8px 18px}
 .brand-logo{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#fff,#808080)}
 .brand h1{font-size:16px;margin:0;font-weight:800}
 .brand .muted{color:var(--muted);font-size:12px;margin-top:2px}
-.nav .item{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;margin:6px 6px;border-radius:12px;border:1px solid var(--line);background:var(--chip);cursor:pointer}
+.nav .item{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;margin:6px 6px;border-radius:12px;border:1px solid var(--line);background:var(--chip);cursor:pointer;user-select:none}
 .nav .item.active{outline:2px solid rgba(255,255,255,.35)}
 .nav .item svg{width:18px;height:18px;stroke:#cbd5e1}
+
 .top{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:rgba(9,11,16,.6);backdrop-filter:saturate(120%) blur(10px);border-bottom:1px solid var(--line)}
-.container{padding:18px;max-width:1300px;margin:0 auto}
+.top .right{display:flex;gap:8px;align-items:center}
+
+.container{padding:18px;max-width:1400px;margin:0 auto}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin-bottom:14px}
-.headerline{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
 .row{display:flex;gap:12px;flex-wrap:wrap;align-items:stretch}
-.col{flex:1;min-width:280px}
+.col{flex:1;min-width:260px}
+h2{margin:0 0 10px} h3{margin:0 0 10px;font-size:14px;letter-spacing:.02em;color:#cbd5e1}
 .btn{background:#0f1420;border:1px solid var(--line);color:var(--fg);padding:10px 12px;border-radius:12px;cursor:pointer}
 .btn.small{padding:6px 10px} .btn.ghost{background:transparent}
-.badge{display:inline-flex;gap:6px;align-items:center;border:1px solid var(--line);background:#0e1422;padding:4px 8px;border-radius:999px;font-size:12px}
-.note{color:var(--muted);font-size:12px}
 input,select,textarea{width:100%;background:#0f1420;color:var(--fg);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
 input[type=file]{padding:8px}
-.toast{position:fixed;right:16px;bottom:16px;background:#0f1420;border:1px solid var(--line);padding:10px 14px;border-radius:12px}
+.badge{display:inline-flex;gap:6px;align-items:center;border:1px solid var(--line);background:#0e1422;padding:4px 8px;border-radius:999px;font-size:12px}
+.note{color:var(--muted);font-size:12px}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;color:#cbd5e1}
 
-/* Tables: smart, minimal */
-.table{width:100%;border-collapse:separate;border-spacing:0 6px}
-.table thead th{position:sticky;top:0;background:var(--panel);z-index:1;border-bottom:1px solid var(--line);padding:10px;text-align:left;font-size:12px;letter-spacing:.03em;color:#cbd5e1;cursor:pointer}
-.table tbody tr{background:#0e131e;border:1px solid var(--line)}
-.table tbody tr:nth-child(odd){background:#0d121c}
+/* Tabs — ONLY one visible */
+.tabs .tab{display:none}
+.tabs .tab.active{display:block}
+
+/* Table */
+.tableWrap{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#0e131e}
+.table{width:100%;border-collapse:separate;border-spacing:0}
+.table thead th{position:sticky;top:0;background:#0f1420;border-bottom:1px solid var(--line);padding:10px;text-align:left;font-size:12px;letter-spacing:.03em;color:#cbd5e1;cursor:pointer;user-select:none}
+.table tbody tr{border-top:1px solid var(--line)}
 .table td{padding:10px;font-size:13px}
-.table .actions{display:flex;gap:6px;flex-wrap:wrap}
+.table tbody tr:nth-child(odd){background:#0d121c}
+.thSort:after{content:" ⌃⌄";opacity:.6}
 
-/* KPI bars */
+/* Pagination */
+.pager{display:flex;gap:6px;align-items:center;justify-content:flex-end;margin-top:8px}
+.pager input{width:70px}
+
+/* KPI */
 .kpiBar{height:10px;background:#0f1420;border:1px solid var(--line);border-radius:999px;overflow:hidden}
 .kpiBar > div{height:100%;background:#d1d5db}
 
 /* Modal */
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:50}
 .modal.show{display:flex}
-.modal .dialog{width:min(720px,96vw);background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:16px}
+.modal .dialog{width:min(780px,96vw);background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:16px}
 .modal .dialog h3{margin:0 0 10px;font-size:16px}
 .modal .footer{display:flex;gap:10px;justify-content:flex-end;margin-top:12px}
 
 /* Calendar */
 .cal{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
-.cal .cal-head{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--line)}
-.cal .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:var(--line)}
-.cal .wd{padding:8px 6px;background:#0e131e;font-size:12px;color:#cbd5e1}
-.cal .cell{min-height:100px;background:#0d121c;padding:8px;position:relative;cursor:pointer}
-.cal .cell .d{font-size:12px;color:#cbd5e1}
-.cal .event{margin-top:6px;padding:4px 6px;border:1px solid var(--line);border-radius:8px;background:#101623;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.cal .today{outline:2px solid #cbd5e1}
+.cal-head{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--line)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:var(--line)}
+.wd{padding:8px 6px;background:#0e131e;font-size:12px;color:#cbd5e1}
+.cell{min-height:110px;background:#0d121c;padding:8px;position:relative;cursor:pointer}
+.d{font-size:12px;color:#cbd5e1}
+.event{margin-top:6px;padding:4px 6px;border:1px solid var(--line);border-radius:8px;background:#101623;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.today{outline:2px solid #cbd5e1}
+
+/* Misc */
+.tools{display:flex;gap:8px;flex-wrap:wrap}
+.folderchip{display:inline-flex;align-items:center;gap:6px;padding:4px 8px;border:1px solid var(--line);border-radius:999px;background:#0f1420;font-size:12px;margin:2px}
+.toast{position:fixed;right:16px;bottom:16px;background:#0f1420;border:1px solid var(--line);padding:10px 14px;border-radius:12px;opacity:0;transition:opacity .2s}
+.separator{height:1px;background:var(--line);margin:12px 0}
 </style>
 </head>
 <body>
@@ -105,7 +126,7 @@ input[type=file]{padding:8px}
         <span>Reporting</span>
       </div>
       <div class="item" data-tab="settings">
-        <svg fill="none" viewBox="0 0 24 24"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm8-3.5a8 8 0 0 0-.2-1.8l2.1-1.6-2-3.5-2.5 1a8.2 8.2 0 0 0-3.1-1.8L14.8 1h-5.6L8.7 3.3a8.2 8.2 0 0 0-3.1 1.8l-2.5-1-2 3.5 2.1 1.6A8 8 0 0 0 4 12c0 .6.07 1.2.2 1.8l-2.1 1.6 2 3.5 2.5-1a8.2 8.2 0 0 0 3.1 1.8L9.2 23h5.6l.5-2.3a8.2 8.2 0 0 0 3.1-1.8l2.5 1 2-3.5-2.1-1.6c.13-.6.2-1.2.2-1.8Z" stroke="currentColor" stroke-width="1.1"/></svg>
+        <svg fill="none" viewBox="0 0 24 24"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm8-3.5a8 8 0 0 0-.2-1.8l2.1-1.6-2-3.5-2.5 1a8.2 8.2 0 0 0-3.1-1.8L14.8 1h-5.6L8.7 3.3a8.2 8.2 0 0 0-3.1 1.8l-2.5-1-2 3.5 2.1 1.6c.13-.6.2-1.2.2-1.8Z" stroke="currentColor" stroke-width="1.1"/></svg>
         <span>Settings</span>
       </div>
     </nav>
@@ -115,7 +136,7 @@ input[type=file]{padding:8px}
   <main>
     <div class="top">
       <strong id="title">Dashboard</strong>
-      <div>
+      <div class="right">
         <span class="note" id="userEmail">Not signed in</span>
         <button id="logoutBtn" class="btn small">Logout</button>
       </div>
@@ -125,11 +146,11 @@ input[type=file]{padding:8px}
 
       <!-- LOGIN -->
       <section id="view-login" class="card">
-        <div class="headerline">
-          <h2>Sign in</h2>
-          <span class="note">Users are in <code class="note">AEG_USERS</code></span>
-        </div>
-        <div class="row">
+        <div class="row" style="align-items:flex-end">
+          <div class="col">
+            <h2>Sign in</h2>
+            <div class="note">Users are in <code class="mono">AEG_USERS</code></div>
+          </div>
           <div class="col"><input id="email" placeholder="Email" value="admin@aegeantech.com"/></div>
           <div class="col"><input id="password" placeholder="Password" type="password"/></div>
           <div class="col"><button id="loginBtn" class="btn">Login</button></div>
@@ -137,243 +158,239 @@ input[type=file]{padding:8px}
       </section>
 
       <!-- APP -->
-      <section id="view-app" class="hidden">
+      <section id="view-app" class="tabs hidden">
 
         <!-- DASHBOARD -->
-        <section id="tab-dashboard" class="card">
-          <div class="headerline">
-            <h2>Dashboard</h2>
+        <section id="tab-dashboard" class="tab active">
+          <div class="card">
             <div class="row">
-              <button class="btn" id="openNewClient">＋ New Client</button>
-              <button class="btn" id="openNewProposal">＋ New Proposal</button>
-              <button class="btn" id="openNewTemplate">↑ Upload Template</button>
-              <button class="btn" id="openNewMeeting">📅 New Meeting</button>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col card">
-              <h3>KPIs</h3>
-              <div class="row">
-                <div class="col">
-                  <div class="note">Clients</div>
-                  <div class="kpiBar"><div id="kpiClientsBar" style="width:0%"></div></div>
-                  <div id="kpiClients" style="margin-top:6px;font-weight:800">0</div>
-                </div>
-                <div class="col">
-                  <div class="note">Pipeline (€)</div>
-                  <div class="kpiBar"><div id="kpiPipelineBar" style="width:0%"></div></div>
-                  <div id="kpiPipeline" style="margin-top:6px;font-weight:800">0</div>
-                </div>
-                <div class="col">
-                  <div class="row" style="margin-top:8px">
-                    <span class="badge">draft <strong id="kpiDraft">0</strong></span>
-                    <span class="badge">sent <strong id="kpiSent">0</strong></span>
-                    <span class="badge">won <strong id="kpiWon">0</strong></span>
-                    <span class="badge">lost <strong id="kpiLost">0</strong></span>
-                  </div>
+              <div class="col card">
+                <h3>Clients</h3>
+                <div class="kpiBar"><div id="kpiClientsBar" style="width:0%"></div></div>
+                <div style="margin-top:6px;font-weight:800" id="kpiClients">0</div>
+              </div>
+              <div class="col card">
+                <h3>Pipeline (€)</h3>
+                <div class="kpiBar"><div id="kpiPipelineBar" style="width:0%"></div></div>
+                <div style="margin-top:6px;font-weight:800" id="kpiPipeline">0</div>
+              </div>
+              <div class="col card">
+                <h3>Proposals</h3>
+                <div class="row" style="margin-top:4px">
+                  <span class="badge">draft <strong id="kpiDraft">0</strong></span>
+                  <span class="badge">sent <strong id="kpiSent">0</strong></span>
+                  <span class="badge">won <strong id="kpiWon">0</strong></span>
+                  <span class="badge">lost <strong id="kpiLost">0</strong></span>
                 </div>
               </div>
             </div>
-            <div class="col card">
-              <h3>Upcoming Meetings</h3>
-              <ul id="kpiUpcoming" style="padding-left:18px;margin:6px 0 0"></ul>
-            </div>
-            <div class="col card">
-              <h3>Activity Log</h3>
-              <ul id="activityLog" style="padding-left:18px;margin:6px 0 0"></ul>
-              <div class="note">Shows recent actions; requires `/api/activities` (present in your backend).</div>
+
+            <div class="row" style="margin-top:8px">
+              <div class="col card">
+                <h3>Upcoming Meetings</h3>
+                <ul id="kpiUpcoming" style="padding-left:18px;margin:8px 0 0"></ul>
+                <div class="note">Create meetings in Calendar or via <code class="mono">/api/meetings</code>.</div>
+              </div>
+              <div class="col card">
+                <h3>Activity Log</h3>
+                <ul id="activityLog" style="padding-left:18px;margin:8px 0 0"></ul>
+                <div class="note">Reads <code class="mono">/api/activities?limit=15</code> if available.</div>
+              </div>
             </div>
           </div>
         </section>
 
         <!-- PROPOSALS -->
-        <section id="tab-proposals" class="card hidden">
-          <div class="headerline">
-            <h2>Proposals</h2>
-            <div class="row">
-              <input id="propSearch" placeholder="Search title…"/>
-              <select id="propFilterStatus"><option value="">All</option><option>draft</option><option>sent</option><option>won</option><option>lost</option></select>
-              <button class="btn" id="propRefresh">Refresh</button>
-              <button class="btn" id="openNewProposal2">＋ New</button>
+        <section id="tab-proposals" class="tab">
+          <div class="card">
+            <div class="row" style="align-items:flex-end">
+              <div class="col"><h2>Proposals</h2></div>
+              <div class="col"><input id="propSearch" placeholder="Search…"/></div>
+              <div class="col">
+                <select id="propFilterStatus"><option value="">All</option><option>draft</option><option>sent</option><option>won</option><option>lost</option></select>
+              </div>
+              <div class="col"><button class="btn" id="openNewProposal">＋ New</button></div>
             </div>
+            <div class="tableWrap" style="margin-top:8px">
+              <table class="table" id="proposalsTable">
+                <thead>
+                  <tr>
+                    <th class="thSort" data-col="id">ID</th>
+                    <th class="thSort" data-col="client_id">Client</th>
+                    <th class="thSort" data-col="title">Title</th>
+                    <th class="thSort" data-col="category">Category</th>
+                    <th class="thSort" data-col="status">Status</th>
+                    <th class="thSort" data-col="value_amount">€</th>
+                    <th class="thSort" data-col="due_date">Due</th>
+                    <th>File</th><th></th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+            <div class="pager" id="proposalsPager"></div>
           </div>
 
           <div class="card">
-            <div class="headerline">
-              <h3>Folders (Assets Library)</h3>
-              <div class="row">
-                <input id="propFolderNew" placeholder="Create folder (e.g., contracts)"/>
-                <button class="btn" id="propFolderAdd">Add Folder</button>
-              </div>
+            <div class="row" style="align-items:flex-end">
+              <div class="col"><h3>Assets Library (Folders)</h3></div>
+              <div class="col"><input id="propFolderNew" placeholder="Folder name (e.g., contracts)"/></div>
+              <div class="col"><button class="btn" id="propFolderAdd">Add Folder</button></div>
             </div>
-            <div id="propFolders" class="row"></div>
-            <div style="height:8px"></div>
+            <div id="propFolders" class="tools" style="margin-top:6px"></div>
+            <div class="separator"></div>
             <div class="row">
               <div class="col"><input id="propAssetFile" type="file" multiple/></div>
               <div class="col"><select id="propFolderSel"></select></div>
               <div class="col"><button class="btn" id="propAssetUpload">Upload to Folder</button></div>
             </div>
-            <div style="height:8px"></div>
-            <table class="table" id="propAssetsTable">
-              <thead><tr><th data-col="id">ID</th><th data-col="folder">Folder</th><th data-col="filename">Filename</th><th data-col="size_bytes">Size</th><th data-col="created_at">Uploaded</th><th></th></tr></thead>
-              <tbody></tbody>
-            </table>
+            <div class="separator"></div>
+            <div class="tableWrap">
+              <table class="table" id="propAssetsTable">
+                <thead><tr><th class="thSort" data-col="id">ID</th><th class="thSort" data-col="folder">Folder</th><th class="thSort" data-col="filename">Filename</th><th class="thSort" data-col="size_bytes">Size</th><th class="thSort" data-col="created_at">Uploaded</th><th></th></tr></thead>
+                <tbody></tbody>
+              </table>
+            </div>
+            <div class="pager" id="propAssetsPager"></div>
           </div>
-
-          <table class="table" id="proposalsTable">
-            <thead>
-              <tr>
-                <th data-col="id">ID</th>
-                <th data-col="client_id">Client</th>
-                <th data-col="title">Title</th>
-                <th data-col="category">Category</th>
-                <th data-col="status">Status</th>
-                <th data-col="value_amount">€</th>
-                <th data-col="due_date">Due</th>
-                <th data-col="file">File</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
         </section>
 
         <!-- CLIENTS -->
-        <section id="tab-clients" class="card hidden">
-          <div class="headerline">
-            <h2>Clients</h2>
-            <div class="row">
-              <input id="clientSearch" placeholder="Search name/contact…"/>
-              <button class="btn" id="clientRefresh">Refresh</button>
-              <button class="btn" id="openNewClient2">＋ New</button>
+        <section id="tab-clients" class="tab">
+          <div class="card">
+            <div class="row" style="align-items:flex-end">
+              <div class="col"><h2>Clients</h2></div>
+              <div class="col"><input id="clientSearch" placeholder="Search name/contact…"/></div>
+              <div class="col"><button class="btn" id="openNewClient">＋ New</button></div>
             </div>
+            <div class="tableWrap" style="margin-top:8px">
+              <table class="table" id="clientsTable">
+                <thead><tr><th class="thSort" data-col="id">ID</th><th class="thSort" data-col="name">Name</th><th class="thSort" data-col="industry">Industry</th><th class="thSort" data-col="contact">Contact</th><th></th></tr></thead>
+                <tbody></tbody>
+              </table>
+            </div>
+            <div class="pager" id="clientsPager"></div>
           </div>
 
-          <table class="table" id="clientsTable">
-            <thead><tr><th data-col="id">ID</th><th data-col="name">Name</th><th data-col="industry">Industry</th><th data-col="contact">Contact</th><th></th></tr></thead>
-            <tbody></tbody>
-          </table>
-
-          <div style="height:8px"></div>
           <div class="card">
-            <div class="headerline">
-              <h3>Client Files & Folders</h3>
-              <div class="row">
-                <select id="clientSel"></select>
-                <input id="clientFolderNew" placeholder="Create folder (e.g., invoices, media)"/>
-                <button class="btn" id="clientFolderAdd">Add Folder</button>
-              </div>
+            <div class="row" style="align-items:flex-end">
+              <div class="col"><h3>Client Files & Folders</h3></div>
+              <div class="col"><select id="clientSel"></select></div>
+              <div class="col"><input id="clientFolderNew" placeholder="New folder (e.g., invoices, media)"/></div>
+              <div class="col"><button class="btn" id="clientFolderAdd">Add Folder</button></div>
             </div>
-            <div id="clientFolders" class="row"></div>
-            <div style="height:8px"></div>
+            <div id="clientFolders" class="tools" style="margin-top:6px"></div>
+            <div class="separator"></div>
             <div class="row">
               <div class="col"><input id="clientFile" type="file" multiple/></div>
               <div class="col"><select id="clientFolderSel"></select></div>
               <div class="col"><button class="btn" id="clientUploadBtn">Upload to Folder</button></div>
             </div>
-            <div style="height:8px"></div>
-            <table class="table" id="clientFilesTable">
-              <thead><tr><th data-col="id">ID</th><th data-col="folder">Folder</th><th data-col="filename">Filename</th><th data-col="size_bytes">Size</th><th data-col="created_at">Uploaded</th><th></th></tr></thead>
-              <tbody></tbody>
-            </table>
+            <div class="separator"></div>
+            <div class="tableWrap">
+              <table class="table" id="clientFilesTable">
+                <thead><tr><th class="thSort" data-col="id">ID</th><th class="thSort" data-col="folder">Folder</th><th class="thSort" data-col="filename">Filename</th><th class="thSort" data-col="size_bytes">Size</th><th class="thSort" data-col="created_at">Uploaded</th><th></th></tr></thead>
+                <tbody></tbody>
+              </table>
+            </div>
+            <div class="pager" id="clientFilesPager"></div>
           </div>
         </section>
 
         <!-- TEMPLATES -->
-        <section id="tab-templates" class="card hidden">
-          <div class="headerline">
-            <h2>Templates Library</h2>
-            <div class="row">
-              <input id="tplSearch" placeholder="Search filename…"/>
-              <button class="btn" id="tplRefresh">Refresh</button>
-              <button class="btn" id="openNewTemplate2">↑ Upload</button>
-            </div>
-          </div>
-
+        <section id="tab-templates" class="tab">
           <div class="card">
-            <div class="headerline">
-              <h3>Folders</h3>
+            <div class="row" style="align-items:flex-end">
+              <div class="col"><h2>Templates</h2></div>
+              <div class="col"><input id="tplSearch" placeholder="Search filename…"/></div>
+              <div class="col"><button class="btn" id="openNewTemplate">↑ Upload</button></div>
+            </div>
+            <div class="card">
+              <div class="row" style="align-items:flex-end">
+                <div class="col"><h3>Folders</h3></div>
+                <div class="col"><input id="tplFolderNew" placeholder="Folder (e.g., sales, legal)"/></div>
+                <div class="col"><button class="btn" id="tplFolderAdd">Add Folder</button></div>
+              </div>
+              <div id="tplFolders" class="tools" style="margin-top:6px"></div>
+              <div class="separator"></div>
               <div class="row">
-                <input id="tplFolderNew" placeholder="Create folder (e.g., sales, legal)"/>
-                <button class="btn" id="tplFolderAdd">Add Folder</button>
+                <div class="col"><input id="tplFile" type="file" multiple/></div>
+                <div class="col"><select id="tplFolderSel"></select></div>
+                <div class="col"><button class="btn" id="tplUploadBtn">Upload</button></div>
               </div>
             </div>
-            <div id="tplFolders" class="row"></div>
-            <div style="height:8px"></div>
-            <div class="row">
-              <div class="col"><input id="tplFile" type="file" multiple/></div>
-              <div class="col"><select id="tplFolderSel"></select></div>
-              <div class="col"><button class="btn" id="tplUploadBtn">Upload to Folder</button></div>
+            <div class="separator"></div>
+            <div class="tableWrap">
+              <table class="table" id="templatesTable">
+                <thead><tr><th class="thSort" data-col="id">ID</th><th class="thSort" data-col="folder">Folder</th><th class="thSort" data-col="filename">Filename</th><th class="thSort" data-col="size_bytes">Size</th><th class="thSort" data-col="created_at">Uploaded</th><th></th></tr></thead>
+                <tbody></tbody>
+              </table>
             </div>
-            <div style="height:8px"></div>
-            <table class="table" id="templatesTable">
-              <thead><tr><th data-col="id">ID</th><th data-col="folder">Folder</th><th data-col="filename">Filename</th><th data-col="size_bytes">Size</th><th data-col="created_at">Uploaded</th><th></th></tr></thead>
-              <tbody></tbody>
-            </table>
+            <div class="pager" id="templatesPager"></div>
           </div>
         </section>
 
         <!-- CALENDAR -->
-        <section id="tab-calendar" class="card hidden">
-          <div class="headerline">
-            <h2>Calendar</h2>
-            <div class="row">
-              <button class="btn" id="openNewMeeting2">＋ New Meeting</button>
-              <button class="btn" id="calToday">Today</button>
+        <section id="tab-calendar" class="tab">
+          <div class="card">
+            <div class="row" style="align-items:center">
+              <div class="col"><h2>Calendar</h2></div>
+              <div class="col"><button class="btn" id="openNewMeeting">＋ New Meeting</button></div>
+              <div class="col" style="text-align:right">
+                <button class="btn small" id="calPrev">‹</button>
+                <strong id="calLabel" style="margin:0 8px">Month YYYY</strong>
+                <button class="btn small" id="calNext">›</button>
+                <button class="btn small" id="calToday">Today</button>
+              </div>
             </div>
+            <div class="cal" style="margin-top:8px">
+              <div class="cal-grid" id="calGrid"></div>
+            </div>
+            <div class="note" style="margin-top:8px">Click a day to schedule. Meetings are fetched from <code class="mono">/api/meetings</code>.</div>
           </div>
-
-          <div class="cal">
-            <div class="cal-head">
-              <button class="btn small" id="calPrev">‹</button>
-              <div><strong id="calLabel">Month YYYY</strong></div>
-              <button class="btn small" id="calNext">›</button>
-            </div>
-            <div class="cal-grid" id="calGrid">
-              <!-- Weekday heads -->
-            </div>
-          </div>
-          <div class="note" style="margin-top:8px">Click a day to add a meeting. Meetings come from `/api/meetings`.</div>
         </section>
 
         <!-- REPORTING -->
-        <section id="tab-reporting" class="card hidden">
-          <div class="headerline"><h2>Reporting</h2></div>
-          <div class="row">
-            <div class="col card">
-              <h3>Summary</h3>
-              <div class="row">
-                <div class="col"><div class="badge">Clients <strong id="rClients">0</strong></div></div>
-                <div class="col"><div class="badge">Pipeline € <strong id="rPipeline">0</strong></div></div>
-                <div class="col"><div class="badge">Draft <strong id="rDraft">0</strong></div></div>
-                <div class="col"><div class="badge">Sent <strong id="rSent">0</strong></div></div>
-                <div class="col"><div class="badge">Won <strong id="rWon">0</strong></div></div>
-                <div class="col"><div class="badge">Lost <strong id="rLost">0</strong></div></div>
+        <section id="tab-reporting" class="tab">
+          <div class="card">
+            <h2>Reporting</h2>
+            <div class="row" style="margin-top:8px">
+              <div class="col card">
+                <h3>Summary</h3>
+                <div class="row">
+                  <div class="col"><div class="badge">Clients <strong id="rClients">0</strong></div></div>
+                  <div class="col"><div class="badge">Pipeline € <strong id="rPipeline">0</strong></div></div>
+                  <div class="col"><div class="badge">Draft <strong id="rDraft">0</strong></div></div>
+                  <div class="col"><div class="badge">Sent <strong id="rSent">0</strong></div></div>
+                  <div class="col"><div class="badge">Won <strong id="rWon">0</strong></div></div>
+                  <div class="col"><div class="badge">Lost <strong id="rLost">0</strong></div></div>
+                </div>
               </div>
-            </div>
-            <div class="col card">
-              <h3>Upcoming meetings</h3>
-              <ul id="rUpcoming" style="padding-left:18px;margin:6px 0"></ul>
+              <div class="col card">
+                <h3>Upcoming meetings</h3>
+                <ul id="rUpcoming" style="padding-left:18px;margin:6px 0"></ul>
+              </div>
             </div>
           </div>
         </section>
 
         <!-- SETTINGS -->
-        <section id="tab-settings" class="card hidden">
-          <div class="headerline"><h2>Settings</h2></div>
-          <div class="row">
-            <div class="col card">
-              <h3>Email (SMTP) Test</h3>
-              <div class="row">
-                <div class="col"><input id="testEmailTo" placeholder="Send test to"/></div>
-                <div class="col"><button class="btn" id="sendTestEmailBtn">Send</button></div>
+        <section id="tab-settings" class="tab">
+          <div class="card">
+            <h2>Settings</h2>
+            <div class="row" style="margin-top:8px">
+              <div class="col card">
+                <h3>Email (SMTP) Test</h3>
+                <div class="row">
+                  <div class="col"><input id="testEmailTo" placeholder="Send test to"/></div>
+                  <div class="col"><button class="btn" id="sendTestEmailBtn">Send</button></div>
+                </div>
+                <div class="note">Requires SMTP_* env vars configured in backend.</div>
               </div>
-              <div class="note">Requires SMTP_* env vars.</div>
-            </div>
-            <div class="col card">
-              <h3>About</h3>
-              <p class="note">Minimal monochrome UI with modal forms, sortable tables and calendar.</p>
+              <div class="col card">
+                <h3>About</h3>
+                <p class="note">Minimal monochrome UI with modal forms, sortable + paginated tables, and calendar.</p>
+              </div>
             </div>
           </div>
         </section>
@@ -386,7 +403,7 @@ input[type=file]{padding:8px}
 <!-- MODALS -->
 <div class="modal" id="modalClient">
   <div class="dialog">
-    <h3>New Client</h3>
+    <h3>Client</h3>
     <div class="row">
       <div class="col"><input id="mClientName" placeholder="Name"/></div>
       <div class="col"><input id="mClientIndustry" placeholder="Industry"/></div>
@@ -458,445 +475,168 @@ input[type=file]{padding:8px}
   </div>
 </div>
 
-<!-- App JS -->
+<div class="toast" id="toast"></div>
+
 <script>
+/* ---------- Helpers ---------- */
 const $ = s => document.querySelector(s);
 const $$ = s => Array.from(document.querySelectorAll(s));
-function toast(msg){ let t=$('.toast'); if(!t){ t=document.createElement('div'); t.className='toast'; document.body.appendChild(t);} t.textContent=msg; t.style.opacity=1; setTimeout(()=>t.style.opacity=0,2200); }
-function bytes(n){ n=Number(n||0); if(n<1024) return n+' B'; if(n<1024*1024) return (n/1024).toFixed(1)+' KB'; if(n<1024*1024*1024) return (n/1024/1024).toFixed(1)+' MB'; return (n/1024/1024/1024).toFixed(1)+' GB'; }
-function fmtDate(d){ return d.toISOString().slice(0,10); }
+const toast = (m)=>{ const t=$('#toast'); t.textContent=m; t.style.opacity=1; setTimeout(()=>t.style.opacity=0,2000); };
+const bytes = (n)=>{ n=Number(n||0); if(n<1024) return n+' B'; if(n<1024*1024) return (n/1024).toFixed(1)+' KB'; if(n<1024*1024*1024) return (n/1024/1024).toFixed(1)+' MB'; return (n/1024/1024/1024).toFixed(1)+' GB'; };
 
-const state = {
-  token: localStorage.getItem('token') || '',
-  email: localStorage.getItem('email') || '',
-  active: 'dashboard',
-  clients: [],
-  meetings: [],
-  cal: new Date()
-};
+/* ---------- Auth + API ---------- */
+const state = { token: localStorage.getItem('token')||'', email: localStorage.getItem('email')||'', active:'dashboard', clients:[], meetings:[], cal:new Date() };
+async function api(path,opts={}){ opts.headers=Object.assign({"Authorization":"Bearer "+state.token},opts.headers||{}); const r=await fetch(path,opts); if(r.status===401){ logout(); throw new Error('Unauthorized'); } const ct=r.headers.get('content-type')||''; return ct.includes('application/json')? r.json(): r.text(); }
 
-async function api(path, opts={}){
-  opts.headers = Object.assign({"Authorization":"Bearer "+state.token}, opts.headers||{});
-  const r = await fetch(path, opts);
-  if(r.status===401){ logout(); throw new Error('Unauthorized'); }
-  const ct = r.headers.get('content-type')||'';
-  return ct.includes('application/json') ? r.json() : r.text();
-}
+/* Login */
+const showApp=()=>{$('#view-login').classList.add('hidden');$('#view-app').classList.remove('hidden');};
+const showLogin=()=>{$('#view-app').classList.add('hidden');$('#view-login').classList.remove('hidden');};
+$('#loginBtn').onclick = async ()=>{ const email=$('#email').value.trim(), password=$('#password').value.trim(); const r=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password})}); if(!r.ok){ toast('Login failed'); return; } const d=await r.json(); state.token=d.token; state.email=d.email; localStorage.setItem('token',d.token); localStorage.setItem('email',d.email); $('#userEmail').textContent=state.email; showApp(); setTab('dashboard'); refreshAll(); };
+const logout=()=>{ localStorage.removeItem('token'); localStorage.removeItem('email'); state.token=''; state.email=''; $('#userEmail').textContent='Not signed in'; showLogin(); };
+$('#logoutBtn').onclick=logout;
 
-/* Auth */
-function showApp(){ $('#view-login').classList.add('hidden'); $('#view-app').classList.remove('hidden'); }
-function showLogin(){ $('#view-app').classList.add('hidden'); $('#view-login').classList.remove('hidden'); }
-$('#loginBtn').onclick = async ()=>{
-  const email=$('#email').value.trim(), password=$('#password').value.trim();
-  const r = await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password})});
-  if(!r.ok){ toast('Login failed'); return; }
-  const data = await r.json();
-  state.token=data.token; state.email=data.email; localStorage.setItem('token',state.token); localStorage.setItem('email',state.email);
-  $('#userEmail').textContent=state.email; showApp(); setTab('dashboard'); refreshAll();
-};
-$('#logoutBtn').onclick = logout;
-function logout(){ localStorage.removeItem('token'); localStorage.removeItem('email'); state.token=''; state.email=''; $('#userEmail').textContent='Not signed in'; showLogin(); }
-
-/* Tabs */
+/* Tabs — guaranteed single tab visible */
 function setTab(id){
   state.active=id;
-  $('#title').textContent = id.charAt(0).toUpperCase()+id.slice(1);
-  $$('#view-app > section').forEach(s=> s.classList.toggle('hidden', s.id!==`tab-${id}`));
+  $('#title').textContent=id.charAt(0).toUpperCase()+id.slice(1);
+  $$('.tabs .tab').forEach(t=> t.classList.toggle('active', t.id===`tab-${id}`));
   $$('.nav .item').forEach(i=> i.classList.toggle('active', i.dataset.tab===id));
   if(id==='calendar'){ renderCalendar(); }
 }
 $$('.nav .item').forEach(i=> i.onclick = ()=> setTab(i.dataset.tab));
 
-/* Dashboard & Reporting */
+/* ---------- Dashboard / Reporting ---------- */
 async function refreshKPIs(){
   const k = await api('/api/reporting/kpis');
+  // numbers + bars
   $('#kpiClients').textContent = k.clients;
   $('#kpiPipeline').textContent = k.pipeline_value;
-  $('#kpiDraft').textContent = k.proposals.draft;
-  $('#kpiSent').textContent  = k.proposals.sent;
-  $('#kpiWon').textContent   = k.proposals.won;
-  $('#kpiLost').textContent  = k.proposals.lost;
+  $('#kpiDraft').textContent = k.proposals.draft; $('#kpiSent').textContent = k.proposals.sent; $('#kpiWon').textContent = k.proposals.won; $('#kpiLost').textContent = k.proposals.lost;
   $('#kpiClientsBar').style.width = Math.min(100, (k.clients||0)*10)+'%';
   $('#kpiPipelineBar').style.width = Math.min(100, (k.pipeline_value||0)/1000)+'%';
+  // meetings
   $('#kpiUpcoming').innerHTML = (k.upcoming_meetings||[]).map(m=>`<li><strong>${m.title}</strong> — ${m.start_at}${m.location?(' • '+m.location):''}</li>`).join('');
-  $('#rClients').textContent = k.clients;
-  $('#rPipeline').textContent = k.pipeline_value;
-  $('#rDraft').textContent = k.proposals.draft; $('#rSent').textContent = k.proposals.sent; $('#rWon').textContent = k.proposals.won; $('#rLost').textContent = k.proposals.lost;
+  // reporting mirror
+  $('#rClients').textContent = k.clients; $('#rPipeline').textContent = k.pipeline_value; $('#rDraft').textContent = k.proposals.draft; $('#rSent').textContent = k.proposals.sent; $('#rWon').textContent = k.proposals.won; $('#rLost').textContent = k.proposals.lost;
   $('#rUpcoming').innerHTML = $('#kpiUpcoming').innerHTML;
-  try{
-    const acts = await api('/api/activities?limit=15');
-    $('#activityLog').innerHTML = (acts||[]).map(a=>`<li><span class="note">${(a.created_at||'').slice(0,19).replace('T',' ')}</span> — <strong>${a.actor||'system'}</strong> ${a.action} <span class="note">(${a.entity}${a.entity_id?(' #'+a.entity_id):''})</span></li>`).join('');
-  }catch(e){ $('#activityLog').innerHTML = '<li class="note">No activity API yet</li>'; }
+  // activities (optional)
+  try{ const acts = await api('/api/activities?limit=15'); $('#activityLog').innerHTML = (acts||[]).map(a=>`<li><span class="mono">${(a.created_at||'').slice(0,19).replace('T',' ')}</span> — <strong>${a.actor||'system'}</strong> ${a.action} <span class="note">(${a.entity}${a.entity_id?(' #'+a.entity_id):''})</span></li>`).join(''); }catch{ $('#activityLog').innerHTML='<li class="note">No activity API yet</li>'; }
 }
 
-/* Helpers: Table sorting */
-function makeSortable(tableSelector){
-  const table = $(tableSelector); if(!table) return;
-  const ths = table.querySelectorAll('thead th[data-col]');
-  let sortKey=null, sortDir=1;
-  ths.forEach(th=>{
-    th.onclick = ()=>{
-      const key = th.dataset.col;
-      sortDir = (sortKey===key) ? -sortDir : 1;
-      sortKey = key;
-      const rows = Array.from(table.querySelectorAll('tbody tr'));
-      rows.sort((a,b)=>{
-        const va = a.querySelector(`[data-col="${key}"]`)?.textContent || a.children[Array.from(ths).indexOf(th)].textContent;
-        const vb = b.querySelector(`[data-col="${key}"]`)?.textContent || b.children[Array.from(ths).indexOf(th)].textContent;
-        const na = parseFloat(va.replace(/[^\d.-]/g,'')); const nb = parseFloat(vb.replace(/[^\d.-]/g,''));
-        if(!Number.isNaN(na) && !Number.isNaN(nb)) return (na-nb)*sortDir;
-        return va.localeCompare(vb)*sortDir;
-      });
-      const tb = table.querySelector('tbody'); tb.innerHTML=''; rows.forEach(r=>tb.appendChild(r));
-    };
-  });
+/* ---------- Reusable table (sort + paginate) ---------- */
+function buildTable(tableSel, rows, pageSel, pageSize=10){
+  const tbl=$(tableSel), tb=tbl.querySelector('tbody'); const ths=tbl.querySelectorAll('thead th[data-col]'); let sortKey=null, sortDir=1, page=1;
+  const render=()=>{ let data=[...rows]; if(sortKey){ data.sort((a,b)=>{ let va=a[sortKey], vb=b[sortKey]; const na=parseFloat(va); const nb=parseFloat(vb); if(!isNaN(na)&&!isNaN(nb)) return (na-nb)*sortDir; return String(va||'').localeCompare(String(vb||''))*sortDir; }); }
+    const total=data.length, pages=Math.max(1,Math.ceil(total/pageSize)); if(page>pages) page=pages; const start=(page-1)*pageSize, end=start+pageSize;
+    tb.innerHTML = data.slice(start,end).map(r=>r._html).join('');
+    const pager=$(pageSel); if(pager){ pager.innerHTML=''; const prev=document.createElement('button'); prev.className='btn small'; prev.textContent='Prev'; prev.disabled=page<=1; prev.onclick=()=>{page--; render();}; pager.appendChild(prev);
+      const info=document.createElement('span'); info.className='note'; info.style.margin='0 6px'; info.textContent=`Page ${page} / ${pages} • ${total} rows`; pager.appendChild(info);
+      const next=document.createElement('button'); next.className='btn small'; next.textContent='Next'; next.disabled=page>=pages; next.onclick=()=>{page++; render();}; pager.appendChild(next); }
+  };
+  ths.forEach(th=> th.onclick=()=>{ const key=th.dataset.col; sortDir=(sortKey===key? -sortDir:1); sortKey=key; render(); });
+  render(); return { rerender: render };
 }
 
-/* Clients */
+/* ---------- Clients ---------- */
 async function loadClients(){
-  const rows = await api('/api/clients');
-  state.clients = rows || [];
-  // Filter
+  const all = await api('/api/clients'); state.clients = all||[];
+  // search filter
   const q = ($('#clientSearch').value||'').toLowerCase();
-  const data = q ? state.clients.filter(c=>(c.name||'').toLowerCase().includes(q) || (c.contact||'').toLowerCase().includes(q)) : state.clients;
-  $('#clientsTable tbody').innerHTML = data.map(r=>`
-    <tr>
-      <td data-col="id">${r.id}</td>
-      <td data-col="name">${r.name||''}</td>
-      <td data-col="industry">${r.industry||''}</td>
-      <td data-col="contact">${r.contact||''}</td>
-      <td class="actions">
-        <button class="btn small" data-edit="${r.id}">Edit</button>
-        <button class="btn small" data-del="${r.id}">Delete</button>
-      </td>
-    </tr>`).join('');
-  makeSortable('#clientsTable');
-  // bindings
-  $$('#clientsTable [data-del]').forEach(b=> b.onclick = async ()=>{ if(!confirm('Delete client?'))return; await api('/api/clients/'+b.dataset.del,{method:'DELETE'}); await loadClients(); await refreshKPIs(); });
-  $$('#clientsTable [data-edit]').forEach(b=> b.onclick = ()=>{
-    const c = state.clients.find(x=>x.id==b.dataset.edit);
-    openModal('#modalClient');
-    $('#mClientName').value=c.name||''; $('#mClientIndustry').value=c.industry||''; $('#mClientContact').value=c.contact||'';
-    $('#mClientSave').dataset.id = c.id;
-  });
+  const rows = (q? state.clients.filter(c=>(c.name||'').toLowerCase().includes(q) || (c.contact||'').toLowerCase().includes(q)) : state.clients)
+    .map(r=>({_html:`
+      <tr>
+        <td>${r.id}</td><td>${r.name||''}</td><td>${r.industry||''}</td><td>${r.contact||''}</td>
+        <td>
+          <button class="btn small" data-edit="${r.id}">Edit</button>
+          <button class="btn small" data-del="${r.id}">Delete</button>
+        </td>
+      </tr>`, id:r.id, name:r.name, industry:r.industry, contact:r.contact}));
+  buildTable('#clientsTable', rows, '#clientsPager', 10);
+  // actions
+  setTimeout(()=>{ $$('#clientsTable [data-del]').forEach(b=> b.onclick=async ()=>{ if(!confirm('Delete client?'))return; await api('/api/clients/'+b.dataset.del,{method:'DELETE'}); await loadClients(); await refreshKPIs(); });
+                    $$('#clientsTable [data-edit]').forEach(b=> b.onclick=()=>{ const c=state.clients.find(x=>x.id==b.dataset.edit); openModal('#modalClient'); $('#mClientName').value=c.name||''; $('#mClientIndustry').value=c.industry||''; $('#mClientContact').value=c.contact||''; $('#mClientSave').dataset.id=c.id; }); },0);
   // selector for file manager
   $('#clientSel').innerHTML = state.clients.map(c=>`<option value="${c.id}">${c.id} — ${c.name}</option>`).join('');
 }
-$('#clientSearch').oninput = loadClients;
-$('#clientRefresh').onclick = loadClients;
-
-async function refreshClientFolders(){
-  const id = $('#clientSel').value;
-  try{
-    const folders = await api(`/api/clients/${id}/folders`);
-    state.clientFolders = new Set(folders && folders.length ? folders : ['general']);
-  }catch{ state.clientFolders = new Set(['general']); }
-  const arr = Array.from(state.clientFolders);
-  $('#clientFolders').innerHTML = arr.map(f=>`<span class="badge">${f}</span>`).join(' ');
-  $('#clientFolderSel').innerHTML = arr.map(f=>`<option>${f}</option>`).join('');
-}
-$('#clientFolderAdd').onclick = ()=>{
-  const v = $('#clientFolderNew').value.trim(); if(!v) return;
-  state.clientFolders.add(v); $('#clientFolderNew').value=''; refreshClientFolders();
-};
-$('#clientUploadBtn').onclick = async ()=>{
-  const id=$('#clientSel').value, folder=$('#clientFolderSel').value||'general', files=$('#clientFile').files;
-  if(!files.length) return toast('Choose files');
-  for(const f of files){
-    const fd=new FormData(); fd.append('file', f); fd.append('folder', folder);
-    const r = await fetch(`/api/clients/${id}/files`,{method:'POST',headers:{'Authorization':'Bearer '+state.token},body:fd});
-    if(!r.ok) return toast('Upload failed: '+f.name);
-  }
-  $('#clientFile').value=''; await loadClientFiles();
-};
-async function loadClientFiles(){
-  const id = $('#clientSel').value;
-  const rows = await api(`/api/clients/${id}/files`);
-  $('#clientFilesTable tbody').innerHTML = (rows||[]).map(r=>`
-    <tr>
-      <td data-col="id">${r.id}</td>
-      <td data-col="folder">${r.folder||'general'}</td>
-      <td data-col="filename">${r.filename}</td>
-      <td data-col="size_bytes">${bytes(r.size_bytes)}</td>
-      <td data-col="created_at">${(r.created_at||'').slice(0,19).replace('T',' ')}</td>
-      <td class="actions">
-        <a class="btn small" href="/api/files/download/${r.id}" target="_blank">Download</a>
-        <button class="btn small" data-del="${r.id}">Delete</button>
-      </td>
-    </tr>`).join('');
-  makeSortable('#clientFilesTable');
-  $$('#clientFilesTable [data-del]').forEach(b=> b.onclick = async ()=>{ await api('/api/files/'+b.dataset.del,{method:'DELETE'}); loadClientFiles(); });
-}
-$('#clientSel').onchange = ()=>{ refreshClientFolders(); loadClientFiles(); };
-
-/* Client modal */
-function openModal(sel){ $(sel).classList.add('show'); }
-function closeModal(sel){ $(sel).classList.remove('show'); }
-$$('[data-close]').forEach(btn=> btn.onclick = ()=> closeModal(btn.getAttribute('data-close')) );
-
-$('#openNewClient,#openNewClient2').forEach ? null : null;
+$('#clientSearch').oninput=loadClients;
 $('#openNewClient').onclick = ()=>{ delete $('#mClientSave').dataset.id; $('#mClientName').value=''; $('#mClientIndustry').value=''; $('#mClientContact').value=''; openModal('#modalClient'); };
-$('#openNewClient2').onclick = $('#openNewClient').onclick;
+$('#mClientSave').onclick = async (e)=>{ const id=e.target.dataset.id; const name=$('#mClientName').value.trim(), industry=$('#mClientIndustry').value.trim(), contact=$('#mClientContact').value.trim(); if(!name) return toast('Name required'); if(id){ await api('/api/clients/'+id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,industry,contact})}); }else{ await api('/api/clients',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,industry,contact})}); } closeModal('#modalClient'); await loadClients(); await refreshKPIs(); };
 
-$('#mClientSave').onclick = async (e)=>{
-  const id = e.target.dataset.id;
-  const name=$('#mClientName').value.trim(), industry=$('#mClientIndustry').value.trim(), contact=$('#mClientContact').value.trim();
-  if(!name) return toast('Name required');
-  if(id){
-    await api('/api/clients/'+id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,industry,contact})});
-  }else{
-    await api('/api/clients',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,industry,contact})});
-  }
-  closeModal('#modalClient'); await loadClients(); await refreshKPIs();
-};
+/* Client folders/files */
+async function refreshClientFolders(){ const id=$('#clientSel').value; let folders; try{ folders=await api(`/api/clients/${id}/folders`);}catch{ folders=['general']; } $('#clientFolders').innerHTML=(folders||[]).map(f=>`<span class="folderchip">${f}</span>`).join(' '); $('#clientFolderSel').innerHTML=(folders||['general']).map(f=>`<option>${f}</option>`).join(''); }
+$('#clientFolderAdd').onclick=()=>{ const v=$('#clientFolderNew').value.trim(); if(!v) return; const sel=$('#clientFolderSel'); sel.innerHTML = `<option>${v}</option>` + sel.innerHTML; $('#clientFolders').insertAdjacentHTML('afterbegin', `<span class="folderchip">${v}</span>`); $('#clientFolderNew').value=''; };
+$('#clientSel').onchange=()=>{ refreshClientFolders(); loadClientFiles(); };
+$('#clientUploadBtn').onclick=async ()=>{ const id=$('#clientSel').value; const folder=$('#clientFolderSel').value||'general'; const files=$('#clientFile').files; if(!files.length) return toast('Choose files'); for(const f of files){ const fd=new FormData(); fd.append('file', f); fd.append('folder', folder); const r=await fetch(`/api/clients/${id}/files`,{method:'POST',headers:{'Authorization':'Bearer '+state.token},body:fd}); if(!r.ok) return toast('Upload failed: '+f.name);} $('#clientFile').value=''; loadClientFiles(); };
+async function loadClientFiles(){ const id=$('#clientSel').value; let rows=await api(`/api/clients/${id}/files`); rows=(rows||[]).map(r=>({_html:`<tr><td>${r.id}</td><td>${r.folder||'general'}</td><td>${r.filename}</td><td>${bytes(r.size_bytes)}</td><td>${(r.created_at||'').slice(0,19).replace('T',' ')}</td><td><a class="btn small" href="/api/files/download/${r.id}" target="_blank">Download</a> <button class="btn small" data-del="${r.id}">Delete</button></td></tr>`, id:r.id, folder:r.folder, filename:r.filename, size_bytes:r.size_bytes, created_at:r.created_at})); buildTable('#clientFilesTable', rows, '#clientFilesPager', 10); setTimeout(()=>{ $$('#clientFilesTable [data-del]').forEach(b=> b.onclick=async ()=>{ await api('/api/files/'+b.dataset.del,{method:'DELETE'}); loadClientFiles(); }); },0); }
 
-/* Proposals */
-async function loadClientsIntoProposal(){
-  const data = state.clients.length? state.clients : await api('/api/clients');
-  state.clients = data;
-  $('#mPropClient').innerHTML = (data||[]).map(c=>`<option value="${c.id}">${c.id} — ${c.name}</option>`).join('');
-}
-async function renderProposals(){
-  let rows = await api('/api/proposals');
-  const q = ($('#propSearch').value||'').toLowerCase();
-  const st = $('#propFilterStatus').value||'';
-  if(q) rows = rows.filter(p=>(p.title||'').toLowerCase().includes(q));
-  if(st) rows = rows.filter(p=>p.status===st);
-  $('#proposalsTable tbody').innerHTML = (rows||[]).map(p=>`
-    <tr>
-      <td data-col="id">${p.id}</td>
-      <td data-col="client_id">${p.client_id}</td>
-      <td data-col="title">${p.title}</td>
-      <td data-col="category">${p.category}</td>
-      <td data-col="status">${p.status}</td>
-      <td data-col="value_amount">${Number(p.value_amount||0).toFixed(2)}</td>
-      <td data-col="due_date">${p.due_date||''}</td>
-      <td>${p.file_id?`<a href="/api/proposals/download/${p.id}" target="_blank">Download</a>`:''}</td>
-      <td class="actions"><button class="btn small" data-del="${p.id}">Delete</button></td>
-    </tr>`).join('');
-  makeSortable('#proposalsTable');
-  $$('#proposalsTable [data-del]').forEach(b=> b.onclick = async ()=>{ if(!confirm('Delete proposal?'))return; await api('/api/proposals/'+b.dataset.del,{method:'DELETE'}); renderProposals(); refreshKPIs(); });
-}
-$('#propRefresh').onclick = renderProposals;
-$('#propSearch').oninput = renderProposals;
-$('#propFilterStatus').onchange = renderProposals;
-$('#openNewProposal,#openNewProposal2').forEach ? null : null;
+/* ---------- Proposals ---------- */
+async function loadClientsIntoProposal(){ const data=state.clients.length? state.clients : await api('/api/clients'); state.clients=data||[]; $('#mPropClient').innerHTML=(state.clients||[]).map(c=>`<option value="${c.id}">${c.id} — ${c.name}</option>`).join(''); }
 $('#openNewProposal').onclick = async ()=>{ await loadClientsIntoProposal(); $('#mPropTitle').value=''; $('#mPropValue').value=''; $('#mPropDue').value=''; $('#mPropFile').value=''; openModal('#modalProposal'); };
-$('#openNewProposal2').onclick = $('#openNewProposal').onclick;
-
-$('#mPropSave').onclick = async ()=>{
-  const client_id=$('#mPropClient').value, title=$('#mPropTitle').value.trim();
-  const category=$('#mPropCategory').value, status=$('#mPropStatus').value;
-  const value_amount=$('#mPropValue').value, due_date=$('#mPropDue').value || null;
-  if(!client_id || !title) return toast('Client & Title required');
-  const f = $('#mPropFile').files[0];
-  if(f){
-    const form=new FormData();
-    form.append('client_id', client_id); form.append('title', title);
-    form.append('category', category); form.append('status', status);
-    form.append('value_amount', value_amount); form.append('currency', 'EUR');
-    if(due_date) form.append('due_date', due_date);
-    form.append('file', f);
-    const r = await fetch('/api/proposals',{method:'POST',headers:{'Authorization':'Bearer '+state.token},body:form});
-    if(!r.ok){ toast('Failed to add'); return; }
-  } else {
-    await api('/api/proposals',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({client_id,title,category,status,value_amount,currency:'EUR',due_date})});
-  }
-  closeModal('#modalProposal'); renderProposals(); refreshKPIs();
+$('#mPropSave').onclick = async ()=>{ const client_id=$('#mPropClient').value, title=$('#mPropTitle').value.trim(), category=$('#mPropCategory').value, status=$('#mPropStatus').value, value_amount=$('#mPropValue').value, due_date=$('#mPropDue').value||null; if(!client_id||!title) return toast('Client & Title required'); const f=$('#mPropFile').files[0];
+  if(f){ const form=new FormData(); form.append('client_id',client_id); form.append('title',title); form.append('category',category); form.append('status',status); form.append('value_amount',value_amount); form.append('currency','EUR'); if(due_date) form.append('due_date',due_date); form.append('file',f); const r=await fetch('/api/proposals',{method:'POST',headers:{'Authorization':'Bearer '+state.token},body:form}); if(!r.ok) return toast('Failed to add'); }
+  else{ await api('/api/proposals',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({client_id,title,category,status,value_amount,currency:'EUR',due_date})}); }
+  closeModal('#modalProposal'); await renderProposals(); await refreshKPIs();
 };
-
-/* Proposal assets folders */
-function chipList(el, arr){ el.innerHTML = arr.map(f=>`<span class="badge">${f}</span>`).join(' '); }
-async function loadProposalFolders(){
-  try{
-    const folders = await api('/api/proposals/folders');
-    state.propFolders = new Set(folders && folders.length? folders : ['general']);
-  }catch{ state.propFolders = new Set(['general']); }
-  const a = Array.from(state.propFolders);
-  chipList($('#propFolders'), a);
-  $('#propFolderSel').innerHTML = a.map(f=>`<option>${f}</option>`).join('');
+async function renderProposals(){ let list=await api('/api/proposals'); const q=($('#propSearch').value||'').toLowerCase(); const st=$('#propFilterStatus').value||''; if(q) list=list.filter(p=>(p.title||'').toLowerCase().includes(q)); if(st) list=list.filter(p=>p.status===st);
+  const rows=(list||[]).map(p=>({_html:`<tr><td>${p.id}</td><td>${p.client_id}</td><td>${p.title}</td><td>${p.category}</td><td>${p.status}</td><td>${Number(p.value_amount||0).toFixed(2)}</td><td>${p.due_date||''}</td><td>${p.file_id?`<a href="/api/proposals/download/${p.id}" target="_blank">Download</a>`:''}</td><td><button class="btn small" data-del="${p.id}">Delete</button></td></tr>`, id:p.id, client_id:p.client_id, title:p.title, category:p.category, status:p.status, value_amount:p.value_amount, due_date:p.due_date}));
+  buildTable('#proposalsTable', rows, '#proposalsPager', 10);
+  setTimeout(()=>{ $$('#proposalsTable [data-del]').forEach(b=> b.onclick=async ()=>{ if(!confirm('Delete proposal?'))return; await api('/api/proposals/'+b.dataset.del,{method:'DELETE'}); renderProposals(); refreshKPIs(); }); },0);
 }
-$('#propFolderAdd').onclick = ()=>{
-  const v = ($('#propFolderNew').value||'').trim(); if(!v) return;
-  state.propFolders.add(v); $('#propFolderNew').value=''; loadProposalFolders();
-};
-$('#propAssetUpload').onclick = async ()=>{
-  const folder=$('#propFolderSel').value||'general', files=$('#propAssetFile').files;
-  if(!files.length) return toast('Choose files');
-  for(const f of files){
-    const fd=new FormData(); fd.append('file', f); fd.append('folder', folder);
-    const r = await fetch('/api/proposals/assets',{method:'POST',headers:{'Authorization':'Bearer '+state.token},body:fd});
-    if(!r.ok) return toast('Upload failed: '+f.name);
-  }
-  $('#propAssetFile').value=''; loadProposalAssets();
-};
-async function loadProposalAssets(){
-  try{
-    const rows = await api('/api/proposals/assets');
-    $('#propAssetsTable tbody').innerHTML = (rows||[]).map(r=>`
-      <tr>
-        <td data-col="id">${r.id}</td>
-        <td data-col="folder">${r.folder||'general'}</td>
-        <td data-col="filename">${r.filename}</td>
-        <td data-col="size_bytes">${bytes(r.size_bytes)}</td>
-        <td data-col="created_at">${(r.created_at||'').slice(0,19).replace('T',' ')}</td>
-        <td class="actions"><a class="btn small" href="/api/files/download/${r.id}" target="_blank">Download</a></td>
-      </tr>`).join('');
-    makeSortable('#propAssetsTable');
-  }catch{ $('#propAssetsTable tbody').innerHTML = `<tr><td colspan="6" class="note">Proposal assets API not available yet</td></tr>`; }
-}
+/* Proposal folders/assets */
+function chipList(el,arr){ el.innerHTML=arr.map(f=>`<span class="folderchip">${f}</span>`).join(' '); }
+async function loadProposalFolders(){ let folders; try{ folders=await api('/api/proposals/folders'); }catch{ folders=['general']; } chipList($('#propFolders'), folders||['general']); $('#propFolderSel').innerHTML=(folders||['general']).map(f=>`<option>${f}</option>`).join(''); }
+$('#propFolderAdd').onclick=()=>{ const v=($('#propFolderNew').value||'').trim(); if(!v) return; $('#propFolders').insertAdjacentHTML('afterbegin', `<span class="folderchip">${v}</span>`); $('#propFolderSel').innerHTML=`<option>${v}</option>` + $('#propFolderSel').innerHTML; $('#propFolderNew').value=''; };
+$('#propAssetUpload').onclick=async ()=>{ const folder=$('#propFolderSel').value||'general'; const files=$('#propAssetFile').files; if(!files.length) return toast('Choose files'); for(const f of files){ const fd=new FormData(); fd.append('file',f); fd.append('folder',folder); const r=await fetch('/api/proposals/assets',{method:'POST',headers:{'Authorization':'Bearer '+state.token},body:fd}); if(!r.ok) return toast('Upload failed: '+f.name);} $('#propAssetFile').value=''; loadProposalAssets(); };
+async function loadProposalAssets(){ let rows=[]; try{ const data=await api('/api/proposals/assets'); rows=(data||[]).map(r=>({_html:`<tr><td>${r.id}</td><td>${r.folder||'general'}</td><td>${r.filename}</td><td>${bytes(r.size_bytes)}</td><td>${(r.created_at||'').slice(0,19).replace('T',' ')}</td><td><a class="btn small" href="/api/files/download/${r.id}" target="_blank">Download</a></td></tr>`})); }catch{ rows=[{_html:`<tr><td colspan="6" class="note">Proposal assets API not available</td></tr>`}] } buildTable('#propAssetsTable', rows, '#propAssetsPager', 10); }
 
-/* Templates with modal upload */
-$('#openNewTemplate,#openNewTemplate2').forEach ? null : null;
-$('#openNewTemplate').onclick = ()=>{ $('#mTplFile').value=''; $('#mTplFolder').value=''; openModal('#modalTemplate'); };
-$('#openNewTemplate2').onclick = $('#openNewTemplate').onclick;
+/* ---------- Templates ---------- */
+$('#openNewTemplate').onclick=()=>{ $('#mTplFile').value=''; $('#mTplFolder').value=''; openModal('#modalTemplate'); };
+$('#mTplSave').onclick=async ()=>{ const f=$('#mTplFile').files[0]; if(!f) return toast('Choose a file'); const folder=($('#mTplFolder').value||'general').trim(); const fd=new FormData(); fd.append('file', f); fd.append('folder', folder); let r=await fetch('/api/templates/upload2',{method:'POST',headers:{'Authorization':'Bearer '+state.token},body:fd}); if(!r.ok){ const fd2=new FormData(); fd2.append('file', f); r=await fetch('/api/templates/upload',{method:'POST',headers:{'Authorization':'Bearer '+state.token},body:fd2}); if(!r.ok) return toast('Upload failed'); } closeModal('#modalTemplate'); renderTemplates(); };
+async function loadTemplateFolders(){ let folders; try{ folders=await api('/api/templates/folders'); }catch{ folders=['general']; } chipList($('#tplFolders'), folders||['general']); $('#tplFolderSel').innerHTML=(folders||['general']).map(f=>`<option>${f}</option>`).join(''); }
+$('#tplFolderAdd').onclick=()=>{ const v=($('#tplFolderNew').value||'').trim(); if(!v) return; $('#tplFolders').insertAdjacentHTML('afterbegin', `<span class="folderchip">${v}</span>`); $('#tplFolderSel').innerHTML=`<option>${v}</option>` + $('#tplFolderSel').innerHTML; $('#tplFolderNew').value=''; };
+$('#tplUploadBtn').onclick=async ()=>{ const folder=$('#tplFolderSel').value||'general'; const files=$('#tplFile').files; if(!files.length) return toast('Choose files'); for(const f of files){ const fd=new FormData(); fd.append('file', f); fd.append('folder', folder); let r=await fetch('/api/templates/upload2',{method:'POST',headers:{'Authorization':'Bearer '+state.token},body:fd}); if(!r.ok){ const fd2=new FormData(); fd2.append('file', f); r=await fetch('/api/templates/upload',{method:'POST',headers:{'Authorization':'Bearer '+state.token},body:fd2}); if(!r.ok) return toast('Upload failed: '+f.name); } } $('#tplFile').value=''; renderTemplates(); };
+async function renderTemplates(){ let rows=null; try{ rows=await api('/api/templates/list2'); }catch{} if(!rows) rows=await api('/api/templates'); rows=(rows||[]).map(r=>({_html:`<tr><td>${r.id}</td><td>${r.folder||'general'}</td><td>${r.filename}</td><td>${bytes(r.size_bytes)}</td><td>${(r.created_at||'').slice(0,19).replace('T',' ')}</td><td><a class="btn small" href="/api/templates/download/${r.id}" target="_blank">Download</a></td></tr>`})); buildTable('#templatesTable', rows, '#templatesPager', 10); }
 
-async function loadTemplateFolders(){
-  try{
-    const folders = await api('/api/templates/folders');
-    state.tplFolders = new Set(folders && folders.length? folders : ['general']);
-  }catch{ state.tplFolders = new Set(['general']); }
-  const a = Array.from(state.tplFolders);
-  chipList($('#tplFolders'), a);
-  $('#tplFolderSel').innerHTML = a.map(f=>`<option>${f}</option>`).join('');
-}
-$('#tplFolderAdd').onclick = ()=>{
-  const v = ($('#tplFolderNew').value||'').trim(); if(!v) return;
-  state.tplFolders.add(v); $('#tplFolderNew').value=''; loadTemplateFolders();
-};
-$('#mTplSave').onclick = async ()=>{
-  const f = $('#mTplFile').files[0]; if(!f) return toast('Choose a file');
-  const folder = ($('#mTplFolder').value||'general').trim();
-  const fd=new FormData(); fd.append('file', f); fd.append('folder', folder);
-  let r = await fetch('/api/templates/upload2',{method:'POST',headers:{'Authorization':'Bearer '+state.token},body:fd});
-  if(!r.ok){ // fallback
-    const fd2=new FormData(); fd2.append('file', f);
-    r = await fetch('/api/templates/upload',{method:'POST',headers:{'Authorization':'Bearer '+state.token},body:fd2});
-    if(!r.ok) return toast('Upload failed');
-  }
-  closeModal('#modalTemplate'); renderTemplates();
-};
-$('#tplUploadBtn').onclick = async ()=>{
-  const files=$('#tplFile').files; if(!files.length) return toast('Choose files');
-  const folder=$('#tplFolderSel').value||'general';
-  for(const f of files){
-    const fd=new FormData(); fd.append('file', f); fd.append('folder', folder);
-    let r = await fetch('/api/templates/upload2',{method:'POST',headers:{'Authorization':'Bearer '+state.token},body:fd});
-    if(!r.ok){ const fd2=new FormData(); fd2.append('file', f); r = await fetch('/api/templates/upload',{method:'POST',headers:{'Authorization':'Bearer '+state.token},body:fd2}); if(!r.ok) return toast('Upload failed: '+f.name); }
-  }
-  $('#tplFile').value=''; renderTemplates();
-};
-async function renderTemplates(){
-  let rows=null; try{ rows = await api('/api/templates/list2'); }catch(e){}
-  if(!rows){ rows = await api('/api/templates'); }
-  const q = ($('#tplSearch').value||'').toLowerCase();
-  if(q) rows = rows.filter(x=>(x.filename||'').toLowerCase().includes(q));
-  $('#templatesTable tbody').innerHTML = (rows||[]).map(r=>`
-    <tr>
-      <td data-col="id">${r.id}</td>
-      <td data-col="folder">${r.folder||'general'}</td>
-      <td data-col="filename">${r.filename}</td>
-      <td data-col="size_bytes">${bytes(r.size_bytes)}</td>
-      <td data-col="created_at">${(r.created_at||'').slice(0,19).replace('T',' ')}</td>
-      <td class="actions"><a class="btn small" href="/api/templates/download/${r.id}" target="_blank">Download</a></td>
-    </tr>`).join('');
-  makeSortable('#templatesTable');
-}
-$('#tplSearch').oninput = renderTemplates;
-$('#tplRefresh').onclick = renderTemplates;
-
-/* Calendar */
-function startOfMonth(d){ return new Date(d.getFullYear(), d.getMonth(), 1); }
-function endOfMonth(d){ return new Date(d.getFullYear(), d.getMonth()+1, 0); }
-function sameDay(a,b){ return a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate(); }
+/* ---------- Calendar ---------- */
+function startOfMonth(d){return new Date(d.getFullYear(),d.getMonth(),1);} function endOfMonth(d){return new Date(d.getFullYear(),d.getMonth()+1,0);} function sameDay(a,b){return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate();}
 async function fetchMeetings(){ state.meetings = await api('/api/meetings'); }
 function renderCalendar(){
-  const base = new Date(state.cal.getFullYear(), state.cal.getMonth(), 1);
-  const s = startOfMonth(base); const e = endOfMonth(base);
-  const firstWeekday = (s.getDay()+6)%7; // Mon=0
-  $('#calLabel').textContent = base.toLocaleString('default',{month:'long', year:'numeric'});
-  const grid = $('#calGrid'); grid.innerHTML='';
-  const weekdays = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-  weekdays.forEach(w=>{ const h=document.createElement('div'); h.className='wd'; h.textContent=w; grid.appendChild(h); });
+  const base=new Date(state.cal.getFullYear(),state.cal.getMonth(),1);
+  const s=startOfMonth(base), e=endOfMonth(base);
+  const first=(s.getDay()+6)%7; const grid=$('#calGrid'); grid.innerHTML='';
+  // headers
+  ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].forEach(w=>{ const h=document.createElement('div'); h.className='wd'; h.textContent=w; grid.appendChild(h); });
   // blanks
-  for(let i=0;i<firstWeekday;i++){ const c=document.createElement('div'); c.className='cell'; c.style.background='transparent'; c.style.cursor='default'; grid.appendChild(c); }
-  const today = new Date();
-  for(let day=1; day<=e.getDate(); day++){
-    const d = new Date(base.getFullYear(), base.getMonth(), day);
-    const c = document.createElement('div'); c.className='cell';
-    if(sameDay(d,today)) c.classList.add('today');
-    const label = document.createElement('div'); label.className='d'; label.textContent=String(day); c.appendChild(label);
-    // events
-    (state.meetings||[]).forEach(m=>{
-      const md = new Date(m.start_at);
-      if(sameDay(d, md)){
-        const ev = document.createElement('div'); ev.className='event'; ev.title = m.title;
-        ev.textContent = m.title;
-        c.appendChild(ev);
-      }
-    });
-    c.onclick = ()=>{
-      // preset modal datetime to clicked day, 10:00
-      const pad=x=>String(x).padStart(2,'0');
-      $('#mMeetTitle').value='';
-      const local = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 10, 0, 0);
-      const localISO = local.toISOString().slice(0,16);
-      $('#mMeetStart').value = localISO;
-      $('#mMeetDuration').value = 60;
-      $('#mMeetLocation').value = '';
-      $('#mMeetParticipants').value = '';
-      $('#mMeetRemind').value = 30;
-      openModal('#modalMeeting');
-    };
-    grid.appendChild(c);
+  for(let i=0;i<first;i++){ const b=document.createElement('div'); b.className='cell'; b.style.background='transparent'; b.style.cursor='default'; grid.appendChild(b); }
+  const today=new Date(); $('#calLabel').textContent = base.toLocaleString('default',{month:'long',year:'numeric'});
+  for(let d=1; d<=e.getDate(); d++){ const date=new Date(base.getFullYear(),base.getMonth(),d); const cell=document.createElement('div'); cell.className='cell'; if(sameDay(date,today)) cell.classList.add('today'); const label=document.createElement('div'); label.className='d'; label.textContent=String(d); cell.appendChild(label);
+    (state.meetings||[]).forEach(m=>{ const md=new Date(m.start_at); if(sameDay(date,md)){ const ev=document.createElement('div'); ev.className='event'; ev.title = `${m.title} @ ${m.location||''}`; ev.textContent=m.title; cell.appendChild(ev);} });
+    cell.onclick=()=>{ const local=new Date(date.getFullYear(),date.getMonth(),date.getDate(),10,0,0); $('#mMeetTitle').value=''; $('#mMeetStart').value = new Date(local.getTime()-local.getTimezoneOffset()*60000).toISOString().slice(0,16); $('#mMeetDuration').value=60; $('#mMeetLocation').value=''; $('#mMeetParticipants').value=''; $('#mMeetRemind').value=30; openModal('#modalMeeting'); };
+    grid.appendChild(cell);
   }
 }
-$('#calPrev').onclick = ()=>{ state.cal.setMonth(state.cal.getMonth()-1); renderCalendar(); };
-$('#calNext').onclick = ()=>{ state.cal.setMonth(state.cal.getMonth()+1); renderCalendar(); };
-$('#calToday').onclick= ()=>{ state.cal = new Date(); renderCalendar(); };
-$('#openNewMeeting,#openNewMeeting2').forEach ? null : null;
-$('#openNewMeeting').onclick = ()=>{ $('#mMeetTitle').value=''; $('#mMeetStart').value=''; $('#mMeetDuration').value=60; $('#mMeetLocation').value=''; $('#mMeetParticipants').value=''; $('#mMeetRemind').value=30; openModal('#modalMeeting'); };
-$('#openNewMeeting2').onclick = $('#openNewMeeting').onclick;
-$('#mMeetSave').onclick = async ()=>{
-  const title=$('#mMeetTitle').value.trim(), startLocal=$('#mMeetStart').value, duration_min=Number($('#mMeetDuration').value||60);
-  const location=$('#mMeetLocation').value.trim(), participants=$('#mMeetParticipants').value.trim(), remind_before_min=Number($('#mMeetRemind').value||30);
-  if(!title || !startLocal || !participants) return toast('Title, Start, Participants required');
-  // Convert local datetime-local to ISO UTC
-  const start = new Date(startLocal); const iso = new Date(start.getTime()-start.getTimezoneOffset()*60000).toISOString().replace('.000','');
-  await api('/api/meetings',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({title,start_at:iso,duration_min,location,participants,remind_before_min})});
-  closeModal('#modalMeeting'); await fetchMeetings(); renderCalendar(); await refreshKPIs();
-};
+$('#calPrev').onclick=()=>{ state.cal.setMonth(state.cal.getMonth()-1); renderCalendar(); };
+$('#calNext').onclick=()=>{ state.cal.setMonth(state.cal.getMonth()+1); renderCalendar(); };
+$('#calToday').onclick=()=>{ state.cal=new Date(); renderCalendar(); };
+$('#openNewMeeting').onclick=()=>{ $('#mMeetTitle').value=''; $('#mMeetStart').value=''; $('#mMeetDuration').value=60; $('#mMeetLocation').value=''; $('#mMeetParticipants').value=''; $('#mMeetRemind').value=30; openModal('#modalMeeting'); };
+$('#mMeetSave').onclick=async ()=>{ const title=$('#mMeetTitle').value.trim(), startLocal=$('#mMeetStart').value, duration_min=Number($('#mMeetDuration').value||60), location=$('#mMeetLocation').value.trim(), participants=$('#mMeetParticipants').value.trim(), remind_before_min=Number($('#mMeetRemind').value||30); if(!title||!startLocal||!participants) return toast('Title, Start, Participants required');
+  const start=new Date(startLocal); const iso=new Date(start.getTime()-start.getTimezoneOffset()*60000).toISOString().replace('.000',''); await api('/api/meetings',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({title,start_at:iso,duration_min,location,participants,remind_before_min})}); closeModal('#modalMeeting'); await fetchMeetings(); renderCalendar(); refreshKPIs(); };
 
-/* Settings */
-$('#sendTestEmailBtn').onclick = async ()=>{
-  const to = ($('#testEmailTo').value||'').trim() || state.email;
-  const r = await api('/api/email/test',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to})});
-  toast((r.ok?'Sent':'Failed') + (r.msg?(' • '+r.msg):'')); };
+/* ---------- Templates / Proposals extra ---------- */
+async function renderProposalsAssetsAndFolders(){ await loadProposalFolders(); await loadProposalAssets(); }
+async function renderTemplatesAndFolders(){ await loadTemplateFolders(); await renderTemplates(); }
 
-/* Proposal assets rendering hookup */
-$('#propFolderNew').onkeyup = (e)=>{ if(e.key==='Enter') $('#propFolderAdd').click(); };
+/* ---------- Settings ---------- */
+$('#sendTestEmailBtn').onclick=async ()=>{ const to=($('#testEmailTo').value||'').trim()||state.email; const r=await api('/api/email/test',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to})}); toast((r.ok?'Sent':'Failed')+(r.msg?(' • '+r.msg):'')); };
 
-/* Initial boot */
-async function refreshAll(){
-  await refreshKPIs();
-  await loadClients();
-  $('#clientSel').dispatchEvent(new Event('change'));
-  await renderProposals();
-  await loadProposalFolders();
-  await loadProposalAssets();
-  await loadTemplateFolders();
-  await renderTemplates();
-  await fetchMeetings();
-  if(state.active==='calendar') renderCalendar();
-}
-(function init(){
-  if(state.token){
-    $('#userEmail').textContent = state.email || 'Signed in';
-    showApp(); setTab('dashboard'); refreshAll().catch(()=>{});
-  }else{
-    showLogin();
-  }
-})();
+/* ---------- Modal helpers ---------- */
+function openModal(sel){ $(sel).classList.add('show'); }
+function closeModal(sel){ $(sel).classList.remove('show'); }
+$$('[data-close]').forEach(b=> b.onclick=()=> closeModal(b.getAttribute('data-close')) );
+
+/* ---------- Boot ---------- */
+async function refreshAll(){ await refreshKPIs(); await loadClients(); await renderProposals(); await renderProposalsAssetsAndFolders(); await renderTemplatesAndFolders(); await fetchMeetings(); if(state.active==='calendar') renderCalendar(); }
+(function init(){ if(state.token){ $('#userEmail').textContent=state.email||'Signed in'; showApp(); setTab('dashboard'); refreshAll().catch(()=>{}); } else { showLogin(); }})();
 </script>
 </body>
 </html>
