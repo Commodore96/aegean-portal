@@ -437,14 +437,16 @@ def reminder_worker():
             pass
         stop_event.wait(60)
 
-# Start the reminder worker once per process (Flask 3 compatible)
-@app.before_serving
-def start_worker():
-    if not getattr(app, "_reminder_started", False):
+# Start the reminder worker once on the first request (Flask-agnostic)
+_worker_started = False
+
+@app.before_request
+def _start_worker_once():
+    global _worker_started
+    if not _worker_started:
         t = Thread(target=reminder_worker, daemon=True)
         t.start()
-        app._reminder_started = True
-
+        _worker_started = True
 
 # -------------------
 # SPA
@@ -456,7 +458,6 @@ def spa(path):
 
 if __name__ == "__main__":
     app.static_folder = "static"
-    import os
-    port = int(os.environ.get("PORT", "5000"))  # Render sets PORT
+    # Render sets PORT; default to 5000 locally
+    port = int(os.environ.get("PORT", "5000"))
     app.run(host="0.0.0.0", port=port, debug=False)
-
