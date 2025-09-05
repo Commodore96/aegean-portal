@@ -1,159 +1,237 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Aegean Tech • Portal</title>
+
+<!-- Minimal, monochrome, professional UI -->
 <style>
 :root{
-  --bg:#0b1220;--text:#e7eefb;--muted:#a9b7d6;
-  --panel:#10182b;--panel2:#0e172a;--chip:rgba(255,255,255,.08);
-  --accent:#6aa8ff;--accent2:#ffd166;--ok:#2ecc71;--bad:#e74c3c;--warn:#f39c12;
-  --b:#1b2a4a;--radius:16px;--shadow:0 10px 26px rgba(0,0,0,.35)
+  --bg:#0b0d12; --fg:#e9edf2; --muted:#a5adbb; --line:#1a2030;
+  --panel:#0f131b; --panel2:#0d1118; --chip:#101623;
+  --accent:#ffffff; --ok:#c8f7c5; --warn:#fff3bf; --bad:#ffd6d9;
+  --radius:14px; --shadow:0 12px 32px rgba(0,0,0,.35);
 }
-*{box-sizing:border-box} html,body{height:100%;margin:0}
-body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text)}
-a{color:var(--accent);text-decoration:none}
-.app{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
-.sidebar{background:var(--panel2);padding:18px 14px;position:sticky;top:0;height:100vh}
-.brand{display:flex;gap:12px;align-items:center;margin-bottom:18px}
-.logo{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2))}
-.title{font-weight:800}
-.muted{color:var(--muted);font-size:12px}
-.nav button{width:100%;text-align:left;background:var(--chip);border:1px solid rgba(255,255,255,.08);color:var(--text);padding:10px 12px;border-radius:12px;margin-bottom:8px;cursor:pointer}
-.nav button.active{outline:2px solid var(--accent)}
-.top{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;background:rgba(0,0,0,.15);border-bottom:1px solid rgba(255,255,255,.06);position:sticky;top:0;backdrop-filter:blur(8px);z-index:5}
-.right{display:flex;gap:8px;align-items:center}
-.btn{background:#0f1830;border:1px solid rgba(255,255,255,.12);color:var(--text);padding:10px 12px;border-radius:12px;cursor:pointer}
-.btn.small{padding:6px 10px}
-.wrap{padding:18px;max-width:1200px;margin:0 auto}
-.card{background:var(--panel);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin-bottom:14px}
-.row{display:flex;gap:12px;flex-wrap:wrap}
-.col{flex:1;min-width:260px}
-h1,h2,h3{margin:0 0 10px}
-input,select,button,textarea{background:#0f1830;color:var(--text);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:10px 12px}
-input[type="file"]{padding:8px}
-.badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;background:var(--chip);border:1px solid rgba(255,255,255,.12)}
-.kpi{display:flex;align-items:center;justify-content:space-between}
-.kpi .num{font-weight:800;font-size:22px}
+*{box-sizing:border-box} html,body{height:100%} body{margin:0;font:14px/1.5 ui-sans-serif,system-ui,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--fg)}
+a{color:inherit;text-decoration:none} ::selection{background:#334155}
+.layout{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
+aside{background:var(--panel2);border-right:1px solid var(--line);position:sticky;top:0;height:100vh;padding:18px 12px}
+.brand{display:flex;gap:12px;align-items:center;margin:6px 8px 18px}
+.brand-logo{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#fff,#808080)}
+.brand h1{font-size:16px;margin:0;font-weight:800}
+.brand .muted{color:var(--muted);font-size:12px;margin-top:2px}
+.nav .item{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;margin:6px 6px;border-radius:12px;border:1px solid var(--line);background:var(--chip);cursor:pointer}
+.nav .item.active{outline:2px solid rgba(255,255,255,.35)}
+.nav .item svg{width:18px;height:18px;stroke:#cbd5e1}
+.top{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:rgba(9,11,16,.6);backdrop-filter:saturate(120%) blur(10px);border-bottom:1px solid var(--line)}
+.top .right{display:flex;gap:8px;align-items:center}
+.container{padding:18px;max-width:1300px;margin:0 auto}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin-bottom:14px}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:stretch}
+.col{flex:1;min-width:280px}
+h2{margin:0 0 10px} h3{margin:0 0 10px;font-size:14px;letter-spacing:.02em;color:#cbd5e1}
+.btn{background:#0f1420;border:1px solid var(--line);color:var(--fg);padding:10px 12px;border-radius:12px;cursor:pointer}
+.btn.small{padding:6px 10px} .btn.ghost{background:transparent}
+input,select,textarea{width:100%;background:#0f1420;color:var(--fg);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+input[type=file]{padding:8px}
+.badge{display:inline-flex;gap:6px;align-items:center;border:1px solid var(--line);background:#0e1422;padding:4px 8px;border-radius:999px;font-size:12px}
 .table{width:100%;border-collapse:collapse}
-.table th,.table td{padding:10px;border-bottom:1px solid rgba(255,255,255,.08);text-align:left;font-size:14px}
+.table th,.table td{border-bottom:1px solid var(--line);padding:10px 10px;text-align:left;font-size:13px}
+.table th{font-weight:700;color:#cbd5e1}
+.tools{display:flex;gap:8px;flex-wrap:wrap}
+.list{list-style:none;padding:0;margin:0}
+.kpiBar{height:10px;background:#0f1420;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+.kpiBar > div{height:100%;background:#d1d5db}
+.kpi{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center}
+.kpi .num{font-weight:800}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.separator{height:1px;background:var(--line);margin:12px 0}
 .hidden{display:none}
-.hr{height:1px;background:rgba(255,255,255,.08);margin:12px 0}
-.ok{background:#0f2a1b;border-color:#1b5a3a}
-.bad{background:#2a1517;border-color:#572a2e}
-.warn{background:#2a230f;border-color:#5c4b1a}
-.light body{background:#f5f7fb;color:#0b1220}
+.toast{position:fixed;right:16px;bottom:16px;background:#0f1420;border:1px solid var(--line);padding:10px 14px;border-radius:12px}
+.headerline{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.folderchip{display:inline-flex;align-items:center;gap:6px;padding:4px 8px;border:1px solid var(--line);border-radius:999px;background:#0f1420;font-size:12px;margin:2px}
+.iconbtn{display:inline-flex;align-items:center;gap:6px}
+.iconbtn svg{width:16px;height:16px;stroke:#cbd5e1}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;color:#cbd5e1}
+.note{color:var(--muted);font-size:12px}
 </style>
 </head>
 <body>
-<div class="app">
+
+<div class="layout">
   <!-- SIDEBAR -->
-  <aside class="sidebar">
+  <aside>
     <div class="brand">
-      <div class="logo"></div>
+      <div class="brand-logo"></div>
       <div>
-        <div class="title">Aegean Tech</div>
+        <h1>Aegean Tech</h1>
         <div class="muted">Business Portal</div>
       </div>
     </div>
-    <div class="nav">
-      <button data-tab="Dashboard" class="active">Dashboard</button>
-      <button data-tab="Proposals">Proposals</button>
-      <button data-tab="Clients">Clients</button>
-      <button data-tab="Templates">Templates</button>
-      <button data-tab="Reporting">Reporting</button>
-      <button data-tab="Settings">Settings</button>
-    </div>
+
+    <nav class="nav">
+      <div class="item active" data-tab="dashboard">
+        <!-- dashboard icon -->
+        <svg fill="none" viewBox="0 0 24 24"><path d="M3 12h7V3H3v9Zm11 9h7V3h-7v18ZM3 21h7v-7H3v7Z" stroke="currentColor" stroke-width="1.5"/></svg>
+        <span>Dashboard</span>
+      </div>
+      <div class="item" data-tab="proposals">
+        <svg fill="none" viewBox="0 0 24 24"><path d="M5 3h9l5 5v13H5V3zm9 0v5h5" stroke="currentColor" stroke-width="1.5"/></svg>
+        <span>Proposals</span>
+      </div>
+      <div class="item" data-tab="clients">
+        <svg fill="none" viewBox="0 0 24 24"><path d="M16 11a4 4 0 1 0-8 0m12 8c0-3.314-3.582-6-8-6s-8 2.686-8 6" stroke="currentColor" stroke-width="1.5"/></svg>
+        <span>Clients</span>
+      </div>
+      <div class="item" data-tab="templates">
+        <svg fill="none" viewBox="0 0 24 24"><path d="M4 4h16v6H4zM4 14h16v6H4z" stroke="currentColor" stroke-width="1.5"/></svg>
+        <span>Templates</span>
+      </div>
+      <div class="item" data-tab="reporting">
+        <svg fill="none" viewBox="0 0 24 24"><path d="M4 20V4m16 16H4m3-3v-5m6 5V7m6 10v-8" stroke="currentColor" stroke-width="1.5"/></svg>
+        <span>Reporting</span>
+      </div>
+      <div class="item" data-tab="settings">
+        <svg fill="none" viewBox="0 0 24 24"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm8-3.5a8 8 0 0 0-.2-1.8l2.1-1.6-2-3.5-2.5 1a8.2 8.2 0 0 0-3.1-1.8L14.8 1h-5.6L8.7 3.3a8.2 8.2 0 0 0-3.1 1.8l-2.5-1-2 3.5 2.1 1.6A8 8 0 0 0 4 12c0 .6.07 1.2.2 1.8l-2.1 1.6 2 3.5 2.5-1a8.2 8.2 0 0 0 3.1 1.8L9.2 23h5.6l.5-2.3a8.2 8.2 0 0 0 3.1-1.8l2.5 1 2-3.5-2.1-1.6c.13-.6.2-1.2.2-1.8Z" stroke="currentColor" stroke-width="1.1"/></svg>
+        <span>Settings</span>
+      </div>
+    </nav>
   </aside>
 
   <!-- MAIN -->
   <main>
     <div class="top">
-      <div><strong id="tabTitle">Dashboard</strong></div>
+      <div class="headerline">
+        <strong id="title">Dashboard</strong>
+      </div>
       <div class="right">
-        <button id="themeBtn" class="btn small">☀️ / 🌙</button>
-        <span class="muted" id="userEmail">Not signed in</span>
+        <span class="note" id="userEmail">Not signed in</span>
         <button id="logoutBtn" class="btn small">Logout</button>
       </div>
     </div>
 
-    <div class="wrap">
+    <div class="container">
 
-      <!-- AUTH VIEW -->
+      <!-- LOGIN -->
       <section id="view-login" class="card">
-        <h2>Sign in</h2>
+        <div class="headerline">
+          <h2>Sign in</h2>
+          <span class="note">Users are defined in <code class="mono">AEG_USERS</code></span>
+        </div>
         <div class="row">
-          <div class="col"><input id="email" placeholder="Email" value="admin@aegeantech.com"></div>
-          <div class="col"><input id="password" placeholder="Password" type="password"></div>
+          <div class="col"><input id="email" placeholder="Email" value="admin@aegeantech.com"/></div>
+          <div class="col"><input id="password" placeholder="Password" type="password"/></div>
           <div class="col"><button id="loginBtn" class="btn">Login</button></div>
         </div>
-        <p class="muted">Defined via <code>AEG_USERS</code> environment variable on the server.</p>
       </section>
 
-      <!-- APP VIEW -->
+      <!-- APP -->
       <section id="view-app" class="hidden">
 
         <!-- DASHBOARD -->
-        <section id="Dashboard" class="card">
-          <h2>Dashboard</h2>
-          <div class="row">
-            <div class="col card">
-              <h3>Quick Actions</h3>
-              <div class="row">
-                <button class="btn" id="qaClient">＋ New Client</button>
-                <button class="btn" id="qaProposal">＋ New Proposal</button>
-                <button class="btn" id="qaTemplate">↑ Upload Template</button>
+        <section id="tab-dashboard" class="card">
+          <div class="headerline"><h2>Dashboard</h2></div>
+          <div class="grid3">
+            <div class="card">
+              <h3>Clients</h3>
+              <div class="kpi">
+                <span class="note">Total</span>
+                <div class="kpiBar"><div id="kpiClientsBar" style="width:0%"></div></div>
+                <span class="num" id="kpiClients">0</span>
               </div>
             </div>
-            <div class="col card">
-              <h3>KPIs</h3>
+            <div class="card">
+              <h3>Pipeline (€)</h3>
+              <div class="kpi">
+                <span class="note">Value</span>
+                <div class="kpiBar"><div id="kpiPipelineBar" style="width:0%"></div></div>
+                <span class="num" id="kpiPipeline">0</span>
+              </div>
+            </div>
+            <div class="card">
+              <h3>Proposals</h3>
               <div class="row">
-                <div class="col card kpi"><span>Clients</span><span id="kpiClients" class="num">0</span></div>
-                <div class="col card kpi"><span>Pipeline €</span><span id="kpiPipeline" class="num">0</span></div>
-                <div class="col card">
-                  <div>Proposals</div>
-                  <div class="row">
-                    <span class="badge" id="kpiDraft">draft:0</span>
-                    <span class="badge" id="kpiSent">sent:0</span>
-                    <span class="badge" id="kpiWon">won:0</span>
-                    <span class="badge" id="kpiLost">lost:0</span>
-                  </div>
-                </div>
+                <span class="badge">draft <strong id="kpiDraft">0</strong></span>
+                <span class="badge">sent <strong id="kpiSent">0</strong></span>
+                <span class="badge">won <strong id="kpiWon">0</strong></span>
+                <span class="badge">lost <strong id="kpiLost">0</strong></span>
               </div>
             </div>
           </div>
           <div class="row">
             <div class="col card">
               <h3>Upcoming Meetings</h3>
-              <ul id="kpiUpcoming"></ul>
+              <ul class="list" id="kpiUpcoming"></ul>
+              <div class="note">Create meetings via your backend endpoint <code class="mono">/api/meetings</code>.</div>
             </div>
             <div class="col card">
-              <h3>Notes</h3>
-              <p class="muted">Use the left tabs to manage your work.</p>
+              <h3>Activity Log</h3>
+              <ul class="list" id="activityLog"></ul>
+              <div class="note">Reads from <code class="mono">/api/activities?limit=15</code> (added in backend section below). Falls back silently if missing.</div>
             </div>
           </div>
         </section>
 
         <!-- PROPOSALS -->
-        <section id="Proposals" class="card hidden">
-          <div class="row" style="justify-content:space-between;align-items:center">
+        <section id="tab-proposals" class="card hidden">
+          <div class="headerline">
             <h2>Proposals</h2>
-            <div class="row">
-              <select id="propClient"></select>
-              <input id="propTitle" placeholder="Title">
-              <select id="propCategory">
-                <option>Maritime</option><option>Yachting</option>
-                <option>Real Estate</option><option>Hospitality</option>
-                <option>Public</option><option>Enterprise</option>
-              </select>
-              <select id="propStatus"><option>draft</option><option>sent</option><option>won</option><option>lost</option></select>
-              <input id="propValue" type="number" step="0.01" placeholder="Value (€)">
-              <input id="propDue" type="date">
-              <input id="propFile" type="file">
-              <button id="addProposalBtn" class="btn">Add</button>
+            <div class="tools">
+              <select id="propFilterStatus"><option value="">All</option><option>draft</option><option>sent</option><option>won</option><option>lost</option></select>
+              <input id="propSearch" placeholder="Search title…"/>
+              <button class="btn" id="propRefresh">Refresh</button>
             </div>
           </div>
+
+          <div class="card">
+            <h3>New Proposal</h3>
+            <div class="row">
+              <div class="col"><label class="note">Client</label><select id="propClient"></select></div>
+              <div class="col"><label class="note">Title</label><input id="propTitle" placeholder="e.g., Website redesign"/></div>
+              <div class="col"><label class="note">Category</label>
+                <select id="propCategory"><option>Maritime</option><option>Yachting</option><option>Real Estate</option><option>Hospitality</option><option>Public</option><option>Enterprise</option></select>
+              </div>
+              <div class="col"><label class="note">Status</label>
+                <select id="propStatus"><option>draft</option><option>sent</option><option>won</option><option>lost</option></select>
+              </div>
+              <div class="col"><label class="note">Value (€)</label><input id="propValue" type="number" step="0.01"/></div>
+              <div class="col"><label class="note">Due</label><input id="propDue" type="date"/></div>
+              <div class="col"><label class="note">Attach</label><input id="propFile" type="file" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.png,.jpg,.jpeg"/></div>
+              <div class="col" style="align-self:flex-end"><button id="addProposalBtn" class="btn">Add</button></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="headerline">
+              <h3>Folders (Library for Proposal Assets)</h3>
+              <div class="tools">
+                <input id="propFolderNew" placeholder="Create folder (e.g., contracts)"/>
+                <button class="btn" id="propFolderAdd">Add Folder</button>
+              </div>
+            </div>
+            <div id="propFolders" class="tools"></div>
+            <div class="separator"></div>
+            <div class="row">
+              <div class="col">
+                <input id="propAssetFile" type="file" multiple/>
+              </div>
+              <div class="col">
+                <select id="propFolderSel"></select>
+              </div>
+              <div class="col">
+                <button class="btn" id="propAssetUpload">Upload to Folder</button>
+              </div>
+            </div>
+            <div class="separator"></div>
+            <table class="table" id="propAssetsTable">
+              <thead><tr><th>ID</th><th>Folder</th><th>Filename</th><th>Size</th><th>Uploaded</th><th></th></tr></thead>
+              <tbody></tbody>
+            </table>
+            <div class="note">Folder endpoints for proposals are provided in the backend section below.</div>
+          </div>
+
           <table class="table" id="proposalsTable">
             <thead>
               <tr><th>ID</th><th>Client</th><th>Title</th><th>Category</th><th>Status</th><th>€</th><th>Due</th><th>File</th><th></th></tr>
@@ -163,67 +241,131 @@ input[type="file"]{padding:8px}
         </section>
 
         <!-- CLIENTS -->
-        <section id="Clients" class="card hidden">
-          <div class="row" style="justify-content:space-between;align-items:center">
+        <section id="tab-clients" class="card hidden">
+          <div class="headerline">
             <h2>Clients</h2>
-            <div class="row">
-              <input id="clientName" placeholder="Name">
-              <input id="clientIndustry" placeholder="Industry">
-              <input id="clientContact" placeholder="Contact">
-              <button id="addClientBtn" class="btn">Add</button>
+            <div class="tools">
+              <input id="clientSearch" placeholder="Search name/contact…"/>
+              <button class="btn" id="clientRefresh">Refresh</button>
             </div>
           </div>
+
+          <div class="card">
+            <h3>Add / Edit Client</h3>
+            <div class="row">
+              <div class="col"><label class="note">Name</label><input id="clientName"/></div>
+              <div class="col"><label class="note">Industry</label><input id="clientIndustry"/></div>
+              <div class="col"><label class="note">Contact</label><input id="clientContact"/></div>
+              <div class="col" style="align-self:flex-end">
+                <button class="btn" id="clientAddBtn">Add</button>
+                <button class="btn ghost hidden" id="clientSaveBtn">Save</button>
+                <button class="btn ghost hidden" id="clientCancelBtn">Cancel</button>
+              </div>
+            </div>
+          </div>
+
           <table class="table" id="clientsTable">
             <thead><tr><th>ID</th><th>Name</th><th>Industry</th><th>Contact</th><th></th></tr></thead>
             <tbody></tbody>
           </table>
+
+          <div class="separator"></div>
+          <div class="card">
+            <div class="headerline">
+              <h3>Client Files & Folders</h3>
+              <div class="tools">
+                <select id="clientSel"></select>
+                <input id="clientFolderNew" placeholder="Create folder (e.g., invoices, media)"/>
+                <button class="btn" id="clientFolderAdd">Add Folder</button>
+              </div>
+            </div>
+            <div id="clientFolders" class="tools"></div>
+            <div class="separator"></div>
+            <div class="row">
+              <div class="col"><input id="clientFile" type="file" multiple/></div>
+              <div class="col"><select id="clientFolderSel"></select></div>
+              <div class="col"><button class="btn" id="clientUploadBtn">Upload to Folder</button></div>
+            </div>
+            <div class="separator"></div>
+            <table class="table" id="clientFilesTable">
+              <thead><tr><th>ID</th><th>Folder</th><th>Filename</th><th>Size</th><th>Uploaded</th><th></th></tr></thead>
+              <tbody></tbody>
+            </table>
+            <div class="note">Uses <code class="mono">/api/clients/:id/folders</code> and <code class="mono">/api/clients/:id/files</code> (described below).</div>
+          </div>
         </section>
 
         <!-- TEMPLATES -->
-        <section id="Templates" class="card hidden">
-          <div class="row" style="justify-content:space-between;align-items:center">
-            <h2>Templates</h2>
-            <div class="row">
-              <input id="tplFile" type="file">
-              <button id="uploadTplBtn" class="btn">Upload</button>
+        <section id="tab-templates" class="card hidden">
+          <div class="headerline">
+            <h2>Templates Library</h2>
+            <div class="tools">
+              <input id="tplSearch" placeholder="Search filename…"/>
+              <button class="btn" id="tplRefresh">Refresh</button>
             </div>
           </div>
-          <table class="table" id="templatesTable">
-            <thead><tr><th>ID</th><th>Filename</th><th>Size</th><th>Uploaded</th><th></th></tr></thead>
-            <tbody></tbody>
-          </table>
+
+          <div class="card">
+            <div class="headerline">
+              <h3>Folders</h3>
+              <div class="tools">
+                <input id="tplFolderNew" placeholder="Create folder (e.g., sales, legal)"/>
+                <button class="btn" id="tplFolderAdd">Add Folder</button>
+              </div>
+            </div>
+            <div id="tplFolders" class="tools"></div>
+            <div class="separator"></div>
+            <div class="row">
+              <div class="col"><input id="tplFile" type="file" multiple/></div>
+              <div class="col"><select id="tplFolderSel"></select></div>
+              <div class="col"><button class="btn" id="tplUploadBtn">Upload to Folder</button></div>
+            </div>
+            <div class="separator"></div>
+            <table class="table" id="templatesTable">
+              <thead><tr><th>ID</th><th>Folder</th><th>Filename</th><th>Size</th><th>Uploaded</th><th></th></tr></thead>
+              <tbody></tbody>
+            </table>
+            <div class="note">Default backend already supports /api/templates (flat). Backend section below adds folders.</div>
+          </div>
         </section>
 
         <!-- REPORTING -->
-        <section id="Reporting" class="card hidden">
-          <h2>Reporting</h2>
-          <div class="row">
-            <div class="col card">
+        <section id="tab-reporting" class="card hidden">
+          <div class="headerline"><h2>Reporting</h2></div>
+          <div class="grid2">
+            <div class="card">
               <h3>Summary</h3>
-              <p>Clients: <strong id="rClients">0</strong></p>
-              <p>Pipeline value: <strong id="rPipeline">0 €</strong></p>
-              <p>Proposals: <span id="rDraft"></span> / <span id="rSent"></span> / <span id="rWon"></span> / <span id="rLost"></span></p>
+              <div class="row">
+                <div class="col"><div class="badge">Clients <strong id="rClients">0</strong></div></div>
+                <div class="col"><div class="badge">Pipeline € <strong id="rPipeline">0</strong></div></div>
+                <div class="col"><div class="badge">Draft <strong id="rDraft">0</strong></div></div>
+                <div class="col"><div class="badge">Sent <strong id="rSent">0</strong></div></div>
+                <div class="col"><div class="badge">Won <strong id="rWon">0</strong></div></div>
+                <div class="col"><div class="badge">Lost <strong id="rLost">0</strong></div></div>
+              </div>
             </div>
-            <div class="col card">
-              <h3>Upcoming Meetings</h3>
-              <ul id="rUpcoming"></ul>
+            <div class="card">
+              <h3>Upcoming meetings</h3>
+              <ul class="list" id="rUpcoming"></ul>
             </div>
           </div>
         </section>
 
         <!-- SETTINGS -->
-        <section id="Settings" class="card hidden">
-          <h2>Settings</h2>
-          <div class="row">
-            <div class="col card">
-              <h3>Theme</h3>
-              <button id="toggleThemeBtn" class="btn">Toggle Dark/Light</button>
-            </div>
-            <div class="col card">
+        <section id="tab-settings" class="card hidden">
+          <div class="headerline"><h2>Settings</h2></div>
+          <div class="grid2">
+            <div class="card">
               <h3>Email (SMTP) Test</h3>
-              <input id="testEmailTo" placeholder="Send test to (email)">
-              <button id="sendTestEmailBtn" class="btn">Send Test Email</button>
-              <p class="muted">Configure SMTP env vars on the server.</p>
+              <div class="row">
+                <div class="col"><input id="testEmailTo" placeholder="Send test to"/></div>
+                <div class="col"><button class="btn" id="sendTestEmailBtn">Send</button></div>
+              </div>
+              <div class="note">Requires SMTP_* env vars in backend.</div>
+            </div>
+            <div class="card">
+              <h3>About</h3>
+              <p class="note">Minimal monochrome UI. Fully keyboard-friendly. Uploads: PDF, Office docs, images, etc.</p>
             </div>
           </div>
         </section>
@@ -233,210 +375,345 @@ input[type="file"]{padding:8px}
   </main>
 </div>
 
+<!-- App JS -->
 <script>
-const $ = (id)=>document.getElementById(id);
-const state = {
-  token: localStorage.getItem("token") || "",
-  email: localStorage.getItem("email") || "",
-  active: "Dashboard"
-};
+/* ---------------- Core helpers ---------------- */
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+function toast(msg){ let t=$('.toast'); if(!t){ t=document.createElement('div'); t.className='toast'; document.body.appendChild(t);} t.textContent=msg; t.style.opacity=1; setTimeout(()=>t.style.opacity=0,2000); }
+function bytes(n){ n=Number(n||0); if(n<1024) return n+' B'; if(n<1024*1024) return (n/1024).toFixed(1)+' KB'; if(n<1024*1024*1024) return (n/1024/1024).toFixed(1)+' MB'; return (n/1024/1024/1024).toFixed(1)+' GB'; }
 
-function setActive(name){
-  state.active = name;
-  document.querySelectorAll("section.card").forEach(s=>{
-    const id = s.getAttribute("id");
-    if(!id) return;
-    if(["Dashboard","Proposals","Clients","Templates","Reporting","Settings"].includes(id)){
-      s.classList.toggle("hidden", id!==name);
-    }
-  });
-  document.querySelectorAll(".nav button").forEach(b=>{
-    b.classList.toggle("active", b.dataset.tab===name);
-  });
-  $("tabTitle").textContent = name;
-}
+const state = {
+  token: localStorage.getItem('token') || '',
+  email: localStorage.getItem('email') || '',
+  active: 'dashboard',
+  // caches
+  clients: [],
+  propFolders: new Set(['general']),
+  clientFolders: {}, // clientId -> Set
+  tplFolders: new Set(['general']),
+};
 
 async function api(path, opts={}){
   opts.headers = Object.assign({"Authorization":"Bearer "+state.token}, opts.headers||{});
   const r = await fetch(path, opts);
-  if(r.status===401){ logout(); throw new Error("Unauthorized"); }
-  const ct = r.headers.get("content-type")||"";
-  if(ct.includes("application/json")) return r.json();
-  return r.text();
+  if(r.status===401){ logout(); throw new Error('Unauthorized'); }
+  const ct = r.headers.get('content-type')||'';
+  return ct.includes('application/json') ? r.json() : r.text();
 }
 
-function bytes(n){
-  n=Number(n||0);
-  if(n<1024) return n+" B";
-  if(n<1024*1024) return (n/1024).toFixed(1)+" KB";
-  if(n<1024*1024*1024) return (n/1024/1024).toFixed(1)+" MB";
-  return (n/1024/1024/1024).toFixed(1)+" GB";
-}
-
-/* THEME */
-$("themeBtn").onclick = ()=>{
-  document.documentElement.classList.toggle("light");
-};
-$("toggleThemeBtn") && ($("toggleThemeBtn").onclick = $("themeBtn").onclick);
-
-/* NAV */
-document.querySelectorAll(".nav button").forEach(b=>{
-  b.onclick = ()=> setActive(b.dataset.tab);
-});
-
-/* AUTH */
-function showApp(){ $("view-login").classList.add("hidden"); $("view-app").classList.remove("hidden"); }
-function showLogin(){ $("view-app").classList.add("hidden"); $("view-login").classList.remove("hidden"); }
-$("loginBtn").onclick = async ()=>{
-  const email=$("email").value.trim(), password=$("password").value.trim();
-  const r = await fetch("/api/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email,password})});
-  if(!r.ok){ alert("Login failed"); return; }
+/* ---------------- Auth ---------------- */
+function showApp(){ $('#view-login').classList.add('hidden'); $('#view-app').classList.remove('hidden'); }
+function showLogin(){ $('#view-app').classList.add('hidden'); $('#view-login').classList.remove('hidden'); }
+async function login(){
+  const email=$('#email').value.trim(), password=$('#password').value.trim();
+  const r = await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password})});
+  if(!r.ok){ toast('Login failed'); return; }
   const data = await r.json();
-  state.token = data.token; state.email = data.email;
-  localStorage.setItem("token", state.token); localStorage.setItem("email", state.email);
-  $("userEmail").textContent = state.email;
-  showApp(); setActive("Dashboard"); await refreshAll();
-};
-$("logoutBtn").onclick = logout;
-function logout(){
-  localStorage.removeItem("token"); localStorage.removeItem("email");
-  state.token=""; state.email=""; $("userEmail").textContent="Not signed in"; showLogin();
+  state.token=data.token; state.email=data.email; localStorage.setItem('token',state.token); localStorage.setItem('email',state.email);
+  $('#userEmail').textContent=state.email; showApp(); setTab('dashboard'); await refreshAll();
 }
+function logout(){ localStorage.removeItem('token'); localStorage.removeItem('email'); state.token=''; state.email=''; $('#userEmail').textContent='Not signed in'; showLogin(); }
+$('#loginBtn').onclick = login; $('#logoutBtn').onclick = logout;
 
-/* DASHBOARD / REPORTING */
+/* ---------------- Tabs ---------------- */
+function setTab(id){
+  state.active=id;
+  $('#title').textContent = id.charAt(0).toUpperCase()+id.slice(1);
+  $$('#view-app > section').forEach(s=>s.classList.toggle('hidden', s.id!==`tab-${id}`));
+  $$('.nav .item').forEach(i=>i.classList.toggle('active', i.dataset.tab===id));
+}
+$$('.nav .item').forEach(i=> i.onclick = ()=> setTab(i.dataset.tab));
+
+/* ---------------- Dashboard ---------------- */
 async function refreshKPIs(){
-  const k = await api("/api/reporting/kpis");
-  $("kpiClients").textContent = k.clients;
-  $("kpiPipeline").textContent = k.pipeline_value;
-  $("kpiDraft").textContent = "draft:"+k.proposals.draft;
-  $("kpiSent").textContent = "sent:"+k.proposals.sent;
-  $("kpiWon").textContent = "won:"+k.proposals.won;
-  $("kpiLost").textContent = "lost:"+k.proposals.lost;
-  $("rClients").textContent = k.clients;
-  $("rPipeline").textContent = k.pipeline_value+" €";
-  $("rDraft").textContent = "draft: "+k.proposals.draft;
-  $("rSent").textContent  = "sent: "+k.proposals.sent;
-  $("rWon").textContent   = "won: "+k.proposals.won;
-  $("rLost").textContent  = "lost: "+k.proposals.lost;
-  $("kpiUpcoming").innerHTML = (k.upcoming_meetings||[]).map(m=>`<li><strong>${m.title}</strong> — ${m.start_at} ${m.location?("("+m.location+")"):""}</li>`).join("");
-  $("rUpcoming").innerHTML = $("kpiUpcoming").innerHTML;
+  const k = await api('/api/reporting/kpis');
+  // KPIs
+  $('#kpiClients').textContent = k.clients;
+  $('#kpiPipeline').textContent = k.pipeline_value;
+  $('#kpiDraft').textContent = k.proposals.draft;
+  $('#kpiSent').textContent  = k.proposals.sent;
+  $('#kpiWon').textContent   = k.proposals.won;
+  $('#kpiLost').textContent  = k.proposals.lost;
+  // Bars (normalize to a visually pleasant width)
+  $('#kpiClientsBar').style.width = Math.min(100, (k.clients||0)*10)+'%';
+  $('#kpiPipelineBar').style.width = Math.min(100, (k.pipeline_value||0)/1000)+'%';
+  // Meetings
+  $('#kpiUpcoming').innerHTML = (k.upcoming_meetings||[]).map(m=>`<li><strong>${m.title}</strong> — ${m.start_at}${m.location?(' • '+m.location):''}</li>`).join('');
+  // Activity log (optional endpoint)
+  try{
+    const acts = await api('/api/activities?limit=15');
+    $('#activityLog').innerHTML = (acts||[]).map(a=>`<li><span class="mono">${(a.created_at||'').slice(0,19).replace('T',' ')}</span> — <strong>${a.actor||'system'}</strong> ${a.action} <span class="note">(${a.entity}${a.entity_id?(' #'+a.entity_id):''})</span></li>`).join('');
+  }catch(e){ $('#activityLog').innerHTML = '<li class="note">No activity API yet</li>'; }
 }
 
-/* CLIENTS */
-async function renderClients(){
-  const data = await api("/api/clients");
-  const tbody = $("clientsTable").querySelector("tbody");
-  tbody.innerHTML = data.map(r=>`
+/* ---------------- Clients ---------------- */
+async function loadClients(){
+  const rows = await api('/api/clients');
+  state.clients = rows || [];
+  $('#clientsTable tbody').innerHTML = state.clients.map(r=>`
     <tr>
-      <td>${r.id}</td><td>${r.name}</td><td>${r.industry||""}</td><td>${r.contact||""}</td>
-      <td><button class="btn small" data-act="del" data-id="${r.id}">Delete</button></td>
-    </tr>`).join("");
-  // proposals dropdown
-  $("propClient").innerHTML = data.map(c=>`<option value="${c.id}">${c.id} — ${c.name}</option>`).join("");
-  tbody.querySelectorAll('button[data-act="del"]').forEach(b=>{
-    b.onclick = async ()=>{ if(confirm("Delete this client and related data?")){ await api("/api/clients/"+b.dataset.id,{method:"DELETE"}); await renderClients(); }};
+      <td>${r.id}</td><td>${r.name||''}</td><td>${r.industry||''}</td><td>${r.contact||''}</td>
+      <td>
+        <button class="btn small iconbtn" data-edit="${r.id}"><svg viewBox="0 0 24 24" fill="none"><path d="M4 20h16M14 4l6 6-10 10H4v-6L14 4Z" stroke="currentColor"/></svg> Edit</button>
+        <button class="btn small iconbtn" data-del="${r.id}"><svg viewBox="0 0 24 24" fill="none"><path d="M4 7h16M7 7v12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V7M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2" stroke="currentColor"/></svg> Delete</button>
+      </td>
+    </tr>`).join('');
+  // Bind
+  $$('#clientsTable [data-del]').forEach(b=> b.onclick = async ()=>{
+    if(!confirm('Delete client?')) return;
+    await api('/api/clients/'+b.dataset.del,{method:'DELETE'}); loadClients(); refreshKPIs();
   });
+  $$('#clientsTable [data-edit]').forEach(b=> b.onclick = ()=>{
+    const c = state.clients.find(x=>x.id==b.dataset.edit);
+    $('#clientName').value = c.name||''; $('#clientIndustry').value = c.industry||''; $('#clientContact').value = c.contact||'';
+    $('#clientAddBtn').classList.add('hidden'); $('#clientSaveBtn').classList.remove('hidden'); $('#clientCancelBtn').classList.remove('hidden');
+    $('#clientSaveBtn').dataset.id = c.id;
+  });
+  // client selector for files
+  $('#clientSel').innerHTML = state.clients.map(c=>`<option value="${c.id}">${c.id} — ${c.name}</option>`).join('');
 }
-$("addClientBtn").onclick = async ()=>{
-  const name=$("clientName").value.trim(), industry=$("clientIndustry").value.trim(), contact=$("clientContact").value.trim();
-  if(!name) return alert("Name required");
-  await api("/api/clients",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name,industry,contact})});
-  $("clientName").value=""; $("clientIndustry").value=""; $("clientContact").value="";
-  await renderClients(); await refreshKPIs();
+$('#clientAddBtn').onclick = async ()=>{
+  const name=$('#clientName').value.trim();
+  const industry=$('#clientIndustry').value.trim();
+  const contact=$('#clientContact').value.trim();
+  if(!name) return toast('Name required');
+  await api('/api/clients',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,industry,contact})});
+  $('#clientName').value=''; $('#clientIndustry').value=''; $('#clientContact').value='';
+  loadClients(); refreshKPIs();
+};
+$('#clientSaveBtn').onclick = async (e)=>{
+  const id=e.target.dataset.id;
+  const name=$('#clientName').value.trim();
+  const industry=$('#clientIndustry').value.trim();
+  const contact=$('#clientContact').value.trim();
+  await api('/api/clients/'+id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,industry,contact})});
+  $('#clientAddBtn').classList.remove('hidden'); $('#clientSaveBtn').classList.add('hidden'); $('#clientCancelBtn').classList.add('hidden');
+  $('#clientName').value=''; $('#clientIndustry').value=''; $('#clientContact').value='';
+  loadClients();
+};
+$('#clientCancelBtn').onclick = ()=>{
+  $('#clientAddBtn').classList.remove('hidden'); $('#clientSaveBtn').classList.add('hidden'); $('#clientCancelBtn').classList.add('hidden');
+  $('#clientName').value=''; $('#clientIndustry').value=''; $('#clientContact').value='';
 };
 
-/* PROPOSALS */
-async function renderProposals(){
-  const data = await api("/api/proposals");
-  const tbody = $("proposalsTable").querySelector("tbody");
-  tbody.innerHTML = data.map(p=>`
+/* Client folders & files */
+async function refreshClientFolders(){
+  const id = $('#clientSel').value;
+  try{
+    const folders = await api(`/api/clients/${id}/folders`);
+    state.clientFolders[id] = new Set(folders && folders.length ? folders : ['general']);
+  }catch(e){
+    state.clientFolders[id] = new Set(['general']); // fallback
+  }
+  const arr = Array.from(state.clientFolders[id]);
+  $('#clientFolders').innerHTML = arr.map(f=>`<span class="folderchip">${f}</span>`).join('');
+  $('#clientFolderSel').innerHTML = arr.map(f=>`<option>${f}</option>`).join('');
+}
+$('#clientFolderAdd').onclick = ()=>{
+  const v = $('#clientFolderNew').value.trim(); if(!v) return;
+  const id = $('#clientSel').value;
+  if(!state.clientFolders[id]) state.clientFolders[id]=new Set(['general']);
+  state.clientFolders[id].add(v);
+  $('#clientFolderNew').value='';
+  refreshClientFolders();
+};
+$('#clientUploadBtn').onclick = async ()=>{
+  const id = $('#clientSel').value;
+  const folder = $('#clientFolderSel').value || 'general';
+  const files = $('#clientFile').files;
+  if(!files.length) return toast('Choose files');
+  for(const f of files){
+    const fd=new FormData(); fd.append('file', f); fd.append('folder', folder);
+    const r = await fetch(`/api/clients/${id}/files`,{method:'POST',headers:{'Authorization':'Bearer '+state.token},body:fd});
+    if(!r.ok) { toast('Upload failed for '+f.name); return; }
+  }
+  toast('Uploaded'); $('#clientFile').value=''; loadClientFiles();
+};
+async function loadClientFiles(){
+  const id = $('#clientSel').value;
+  const rows = await api(`/api/clients/${id}/files`);
+  $('#clientFilesTable tbody').innerHTML = (rows||[]).map(r=>`
     <tr>
-      <td>${p.id}</td>
-      <td>${p.client_id}</td>
-      <td>${p.title}</td>
-      <td><span class="badge">${p.category}</span></td>
-      <td><span class="badge">${p.status}</span></td>
-      <td>${Number(p.value_amount||0).toFixed(2)}</td>
-      <td>${p.due_date||""}</td>
-      <td>${p.file_id?`<a href="/api/proposals/download/${p.id}" target="_blank">Download</a>`:""}</td>
-      <td><button class="btn small" data-id="${p.id}" data-act="del">Delete</button></td>
-    </tr>`).join("");
-  tbody.querySelectorAll('button[data-act="del"]').forEach(b=>{
-    b.onclick = async ()=>{ if(confirm("Delete proposal?")){ await api("/api/proposals/"+b.dataset.id,{method:"DELETE"}); await renderProposals(); await refreshKPIs(); } };
+      <td>${r.id}</td><td>${r.folder||'general'}</td><td>${r.filename}</td><td>${bytes(r.size_bytes)}</td>
+      <td>${(r.created_at||'').slice(0,19).replace('T',' ')}</td>
+      <td>
+        <a class="btn small" href="/api/files/download/${r.id}" target="_blank">Download</a>
+        <button class="btn small" data-del="${r.id}">Delete</button>
+      </td>
+    </tr>`).join('');
+  $$('#clientFilesTable [data-del]').forEach(b=> b.onclick = async ()=>{
+    await api('/api/files/'+b.dataset.del,{method:'DELETE'}); loadClientFiles();
   });
 }
-$("addProposalBtn").onclick = async ()=>{
-  const client_id=$("propClient").value, title=$("propTitle").value.trim();
-  const category=$("propCategory").value, status=$("propStatus").value;
-  const value_amount=$("propValue").value, due_date=$("propDue").value || null;
-  if(!client_id || !title) return alert("Client & Title required");
-  const f = $("propFile").files[0];
+$('#clientSel').onchange = ()=>{ refreshClientFolders(); loadClientFiles(); };
+
+/* ---------------- Proposals ---------------- */
+async function renderProposals(){
+  let rows = await api('/api/proposals');
+  // search and filter client-side
+  const q = ($('#propSearch').value||'').toLowerCase();
+  const st = $('#propFilterStatus').value||'';
+  if(q) rows = rows.filter(p=>(p.title||'').toLowerCase().includes(q));
+  if(st) rows = rows.filter(p=>p.status===st);
+  $('#proposalsTable tbody').innerHTML = (rows||[]).map(p=>`
+    <tr>
+      <td>${p.id}</td><td>${p.client_id}</td><td>${p.title}</td>
+      <td>${p.category}</td><td>${p.status}</td>
+      <td>${Number(p.value_amount||0).toFixed(2)}</td><td>${p.due_date||''}</td>
+      <td>${p.file_id?`<a href="/api/proposals/download/${p.id}" target="_blank">Download</a>`:''}</td>
+      <td><button class="btn small" data-del="${p.id}">Delete</button></td>
+    </tr>`).join('');
+  $$('#proposalsTable [data-del]').forEach(b=> b.onclick = async ()=>{
+    if(!confirm('Delete proposal?')) return;
+    await api('/api/proposals/'+b.dataset.del,{method:'DELETE'}); renderProposals(); refreshKPIs();
+  });
+}
+$('#propRefresh').onclick = renderProposals;
+$('#propSearch').oninput = renderProposals;
+$('#propFilterStatus').onchange = renderProposals;
+
+async function loadClientsIntoProposals(){
+  const data = state.clients.length? state.clients : await api('/api/clients');
+  state.clients = data;
+  $('#propClient').innerHTML = (data||[]).map(c=>`<option value="${c.id}">${c.id} — ${c.name}</option>`).join('');
+}
+$('#addProposalBtn').onclick = async ()=>{
+  const client_id=$('#propClient').value, title=$('#propTitle').value.trim();
+  const category=$('#propCategory').value, status=$('#propStatus').value;
+  const value_amount=$('#propValue').value, due_date=$('#propDue').value || null;
+  if(!client_id || !title) return toast('Client & Title required');
+  const f = $('#propFile').files[0];
   if(f){
     const form=new FormData();
-    form.append("client_id", client_id);
-    form.append("title", title);
-    form.append("category", category);
-    form.append("status", status);
-    form.append("value_amount", value_amount);
-    form.append("currency", "EUR");
-    if(due_date) form.append("due_date", due_date);
-    form.append("file", f);
-    const r = await fetch("/api/proposals",{method:"POST",headers:{"Authorization":"Bearer "+state.token},body:form});
-    if(!r.ok){ alert("Failed to add"); return; }
+    form.append('client_id', client_id);
+    form.append('title', title);
+    form.append('category', category);
+    form.append('status', status);
+    form.append('value_amount', value_amount);
+    form.append('currency', 'EUR');
+    if(due_date) form.append('due_date', due_date);
+    form.append('file', f);
+    const r = await fetch('/api/proposals',{method:'POST',headers:{'Authorization':'Bearer '+state.token},body:form});
+    if(!r.ok){ toast('Failed to add'); return; }
   } else {
-    await api("/api/proposals",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({client_id,title,category,status,value_amount,currency:"EUR",due_date})});
+    await api('/api/proposals',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({client_id,title,category,status,value_amount,currency:'EUR',due_date})});
   }
-  $("propTitle").value=""; $("propValue").value=""; $("propDue").value=""; $("propFile").value="";
-  await renderProposals(); await refreshKPIs();
+  $('#propTitle').value=''; $('#propValue').value=''; $('#propDue').value=''; $('#propFile').value='';
+  renderProposals(); refreshKPIs();
 };
 
-/* TEMPLATES */
+/* Proposal folders & assets (requires backend add-ons below) */
+function _renderFolderChips(el, arr){ el.innerHTML = arr.map(f=>`<span class="folderchip">${f}</span>`).join(''); }
+async function loadProposalFolders(){
+  try{
+    const folders = await api('/api/proposals/folders');
+    state.propFolders = new Set(folders && folders.length? folders : ['general']);
+  }catch(e){ state.propFolders = new Set(['general']); }
+  const arr = Array.from(state.propFolders);
+  _renderFolderChips($('#propFolders'), arr);
+  $('#propFolderSel').innerHTML = arr.map(f=>`<option>${f}</option>`).join('');
+}
+$('#propFolderAdd').onclick = ()=>{
+  const v = ($('#propFolderNew').value||'').trim(); if(!v) return;
+  state.propFolders.add(v); $('#propFolderNew').value=''; loadProposalFolders(); // optimistic
+};
+$('#propAssetUpload').onclick = async ()=>{
+  const folder = $('#propFolderSel').value || 'general';
+  const files = $('#propAssetFile').files;
+  if(!files.length) return toast('Choose files');
+  for(const f of files){
+    const fd = new FormData(); fd.append('file', f); fd.append('folder', folder);
+    const r = await fetch('/api/proposals/assets',{method:'POST',headers:{'Authorization':'Bearer '+state.token},body:fd});
+    if(!r.ok){ toast('Upload failed: '+f.name); return; }
+  }
+  $('#propAssetFile').value=''; loadProposalAssets();
+};
+async function loadProposalAssets(){
+  try{
+    const rows = await api('/api/proposals/assets');
+    $('#propAssetsTable tbody').innerHTML = (rows||[]).map(r=>`
+      <tr>
+        <td>${r.id}</td><td>${r.folder||'general'}</td><td>${r.filename}</td><td>${bytes(r.size_bytes)}</td>
+        <td>${(r.created_at||'').slice(0,19).replace('T',' ')}</td>
+        <td><a class="btn small" href="/api/files/download/${r.id}" target="_blank">Download</a></td>
+      </tr>`).join('');
+  }catch(e){
+    $('#propAssetsTable tbody').innerHTML = `<tr><td colspan="6" class="note">Proposal assets API not available yet</td></tr>`;
+  }
+}
+
+/* ---------------- Templates (with folders) ---------------- */
+async function loadTemplateFolders(){
+  try{
+    const folders = await api('/api/templates/folders');
+    state.tplFolders = new Set(folders && folders.length? folders : ['general']);
+  }catch(e){ state.tplFolders = new Set(['general']); }
+  const arr = Array.from(state.tplFolders);
+  _renderFolderChips($('#tplFolders'), arr);
+  $('#tplFolderSel').innerHTML = arr.map(f=>`<option>${f}</option>`).join('');
+}
+$('#tplFolderAdd').onclick = ()=>{
+  const v = ($('#tplFolderNew').value||'').trim(); if(!v) return;
+  state.tplFolders.add(v); $('#tplFolderNew').value=''; loadTemplateFolders(); // optimistic
+};
+$('#tplUploadBtn').onclick = async ()=>{
+  const folder = $('#tplFolderSel').value || 'general';
+  const files = $('#tplFile').files; if(!files.length) return toast('Choose files');
+  for(const f of files){
+    // backend enhancement adds /api/templates/upload2 supporting folder
+    const fd=new FormData(); fd.append('file', f); fd.append('folder', folder);
+    let r = await fetch('/api/templates/upload2',{method:'POST',headers:{'Authorization':'Bearer '+state.token},body:fd});
+    if(!r.ok){
+      // fallback to existing flat endpoint if new one missing
+      const fd2=new FormData(); fd2.append('file', f);
+      r = await fetch('/api/templates/upload',{method:'POST',headers:{'Authorization':'Bearer '+state.token},body:fd2});
+      if(!r.ok){ toast('Upload failed: '+f.name); return; }
+    }
+  }
+  $('#tplFile').value=''; renderTemplates();
+};
 async function renderTemplates(){
-  const data = await api("/api/templates");
-  const tbody = $("templatesTable").querySelector("tbody");
-  tbody.innerHTML = data.map(r=>`
+  // try folder-aware list first
+  let rows=null;
+  try{ rows = await api('/api/templates/list2'); }catch(e){}
+  if(!rows){ rows = await api('/api/templates'); }
+  $('#templatesTable tbody').innerHTML = (rows||[]).map(r=>`
     <tr>
-      <td>${r.id}</td>
-      <td>${r.filename}</td>
-      <td>${bytes(r.size_bytes)}</td>
-      <td>${(r.created_at||"").slice(0,19).replace("T"," ")}</td>
-      <td><a href="/api/templates/download/${r.id}" target="_blank">Download</a></td>
-    </tr>`).join("");
+      <td>${r.id}</td><td>${(r.folder||'general')}</td><td>${r.filename}</td><td>${bytes(r.size_bytes)}</td>
+      <td>${(r.created_at||'').slice(0,19).replace('T',' ')}</td>
+      <td><a class="btn small" href="/api/templates/download/${r.id}" target="_blank">Download</a></td>
+    </tr>`).join('');
 }
-$("uploadTplBtn").onclick = async ()=>{
-  const f = $("tplFile").files[0];
-  if(!f) return alert("Choose a file");
-  const form = new FormData(); form.append("file", f);
-  const r = await fetch("/api/templates/upload",{method:"POST",headers:{"Authorization":"Bearer "+state.token},body:form});
-  if(!r.ok){ alert("Upload failed"); return; }
-  $("tplFile").value=""; await renderTemplates();
+
+/* ---------------- Settings ---------------- */
+$('#sendTestEmailBtn').onclick = async ()=>{
+  const to = ($('#testEmailTo').value||'').trim() || state.email;
+  const r = await api('/api/email/test',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to})});
+  toast((r.ok?'Sent':'Failed') + (r.msg?(' • '+r.msg):''));
 };
 
-/* SETTINGS — EMAIL TEST */
-$("sendTestEmailBtn").onclick = async ()=>{
-  const to = $("testEmailTo").value.trim() || state.email;
-  const r = await api("/api/email/test",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({to})});
-  alert(r.ok ? "Sent!" : ("Failed: "+r.msg));
-};
-
-/* QUICK ACTIONS */
-$("qaClient").onclick = ()=> setActive("Clients");
-$("qaProposal").onclick = ()=> setActive("Proposals");
-$("qaTemplate").onclick = ()=> setActive("Templates");
-
-/* BOOT */
+/* ---------------- App boot ---------------- */
 async function refreshAll(){
-  await Promise.all([refreshKPIs(), renderClients(), renderProposals(), renderTemplates()]);
+  await refreshKPIs();
+  await loadClients();
+  await loadClientsIntoProposals();
+  await renderProposals();
+  await loadProposalFolders();
+  await loadProposalAssets();
+  await loadTemplateFolders();
+  await renderTemplates();
+  await refreshClientFolders();
+  await loadClientFiles();
 }
-if(state.token){
-  $("userEmail").textContent = state.email || "Signed in";
-  $("view-login").classList.add("hidden");
-  $("view-app").classList.remove("hidden");
-  setActive("Dashboard");
-  refreshAll();
-} else {
-  setActive("Dashboard");
-}
+(function init(){
+  if(state.token){
+    $('#userEmail').textContent = state.email || 'Signed in';
+    showApp(); setTab('dashboard'); refreshAll().catch(()=>{});
+  }else{
+    showLogin();
+  }
+})();
 </script>
 </body>
 </html>
