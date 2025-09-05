@@ -1,27 +1,31 @@
-# app.py — Aegean Tech Portal (Supabase + Email Reminders)
-import os, secrets, smtplib, datetime, json
+# app.py — Aegean Tech Portal (Supabase + Folders + Assets + Email Reminders)
+import os, secrets, smtplib, datetime, json, traceback
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+
+from functools import wraps
+from threading import Thread, Event
+
 from flask import Flask, request, jsonify, redirect
 from werkzeug.utils import secure_filename
-from functools import wraps
-from supabase import create_client, Client
-from threading import Thread, Event
-import time
 
-# -------------------
+from supabase import create_client, Client
+
+# ────────────────────────────────────────────────────────────────────────────────
 # Environment Config
-# -------------------
+# ────────────────────────────────────────────────────────────────────────────────
 SUPABASE_URL = os.environ.get("SUPABASE_URL", "")
 SUPABASE_SERVICE_ROLE = os.environ.get("SUPABASE_SERVICE_ROLE", "")
 AEG_USERS = os.environ.get("AEG_USERS", "admin@aegeantech.com:ChangeMe, partner@aegeantech.com:ChangeMeToo")
 
-# SMTP (use any provider: Mailgun/SendGrid/Gmail app password)
+# SMTP (Mailgun/SendGrid/Gmail app password etc.)
 SMTP_HOST = os.environ.get("SMTP_HOST", "")
 SMTP_PORT = int(os.environ.get("SMTP_PORT", "587"))
 SMTP_USER = os.environ.get("SMTP_USER", "")
 SMTP_PASS = os.environ.get("SMTP_PASS", "")
 SMTP_FROM = os.environ.get("SMTP_FROM", "noreply@aegeantech.com")
+
+APP_VERSION = os.environ.get("APP_VERSION", "1.4.0")
 
 if not SUPABASE_URL or not SUPABASE_SERVICE_ROLE:
     raise RuntimeError("Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE")
@@ -35,42 +39,39 @@ for pair in [p.strip() for p in AEG_USERS.split(",") if p.strip()]:
         email, pw = pair.split(":", 1)
         USERS[email.strip()] = pw.strip()
 
-app = Flask(__name__)
+# ────────────────────────────────────────────────────────────────────────────────
+# Flask App
+# ────────────────────────────────────────────────────────────────────────────────
+app = Flask(__name__, static_folder="static", static_url_path="/static")
 app.config["JSON_SORT_KEYS"] = False
 app.config["MAX_CONTENT_LENGTH"] = 1024 * 1024 * 200  # 200 MB
 
-# -------------------
-# Auth (Bearer token)
-# -------------------
+# ────────────────────────────────────────────────────────────────────────────────
+# Helpers / Middleware
+# ────────────────────────────────────────────────────────────────────────────────
 TOKENS = {}  # token -> email
+stop_event = Event()
+_worker_started = False
+
+def json_error(message, code=400, **extra):
+    payload = {"error": message}
+    if extra:
+        payload.update(extra)
+    return jsonify(payload), code
 
 def require_auth(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
         auth = request.headers.get("Authorization", "")
         if not auth.startswith("Bearer "):
-            return jsonify({"error": "Unauthorized"}), 401
+            return json_error("Unauthorized", 401)
         token = auth.split(" ", 1)[1]
         if token not in TOKENS:
-            return jsonify({"error": "Unauthorized"}), 401
+            return json_error("Unauthorized", 401)
         request.user_email = TOKENS[token]
         return f(*args, **kwargs)
     return wrapper
 
-@app.post("/api/login")
-def login():
-    data = request.get_json(silent=True) or {}
-    email = (data.get("email") or "").strip()
-    password = (data.get("password") or "").strip()
-    if email in USERS and USERS[email] == password:
-        token = secrets.token_urlsafe(32)
-        TOKENS[token] = email
-        return jsonify({"token": token, "role": "admin", "email": email})
-    return jsonify({"error": "Invalid credentials"}), 401
-
-# -------------------
-# Utilities
-# -------------------
 def log_activity(actor, action, entity, entity_id=None, details=None):
     try:
         supabase.table("activities").insert({
@@ -81,14 +82,15 @@ def log_activity(actor, action, entity, entity_id=None, details=None):
             "details": details or {},
         }).execute()
     except Exception:
+        # Avoid crashing the request if logging fails
         pass
 
 def send_email(to_emails, subject, html_body, ics_text=None):
-    if not SMTP_HOST or not SMTP_USER or not SMTP_PASS or not SMTP_FROM:
-        # Email disabled if SMTP is missing
+    if not (SMTP_HOST and SMTP_USER and SMTP_PASS and SMTP_FROM):
         return False, "SMTP not configured"
     if isinstance(to_emails, str):
         to_emails = [e.strip() for e in to_emails.split(",") if e.strip()]
+
     msg = MIMEMultipart("mixed")
     msg["From"] = SMTP_FROM
     msg["To"] = ", ".join(to_emails)
@@ -111,12 +113,12 @@ def send_email(to_emails, subject, html_body, ics_text=None):
 
 def to_ics(meeting):
     """
-    meeting: dict with title, start_at (UTC iso), duration_min, location
+    meeting: dict with title, start_at (UTC iso), duration_min, location, id
     """
     start = datetime.datetime.fromisoformat(meeting["start_at"].replace("Z","")).replace(tzinfo=datetime.timezone.utc)
     end = start + datetime.timedelta(minutes=int(meeting.get("duration_min",60)))
     def fmt(dt): return dt.strftime("%Y%m%dT%H%M%SZ")
-    uid = f"{meeting['id']}@aegeantech"
+    uid = f"{meeting.get('id', secrets.token_hex(6))}@aegeantech"
     ics = f"""BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//AegeanTech//Portal//EN
@@ -134,14 +136,46 @@ END:VCALENDAR
 """
     return ics
 
-# -------------------
-# Clients
-# -------------------
+# ────────────────────────────────────────────────────────────────────────────────
+# Auth
+# ────────────────────────────────────────────────────────────────────────────────
+@app.post("/api/login")
+def login():
+    data = request.get_json(silent=True) or {}
+    email = (data.get("email") or "").strip()
+    password = (data.get("password") or "").strip()
+    if email in USERS and USERS[email] == password:
+        token = secrets.token_urlsafe(32)
+        TOKENS[token] = email
+        return jsonify({"token": token, "role": "admin", "email": email})
+    return json_error("Invalid credentials", 401)
+
+# ────────────────────────────────────────────────────────────────────────────────
+# Activities (Dashboard feed)
+# ────────────────────────────────────────────────────────────────────────────────
+@app.get("/api/activities")
+@require_auth
+def activities_feed():
+    limit = int(request.args.get("limit", 15))
+    res = supabase.table("activities").select("*").order("created_at", desc=True).limit(limit).execute()
+    return jsonify(res.data or [])
+
+# ────────────────────────────────────────────────────────────────────────────────
+# Clients CRUD
+# ────────────────────────────────────────────────────────────────────────────────
 @app.get("/api/clients")
 @require_auth
 def clients_list():
     res = supabase.table("clients").select("*").order("id", desc=True).execute()
     return jsonify(res.data or [])
+
+@app.get("/api/clients/<int:client_id>")
+@require_auth
+def clients_get(client_id):
+    res = supabase.table("clients").select("*").eq("id", client_id).single().execute()
+    if not res.data:
+        return json_error("not found", 404)
+    return jsonify(res.data)
 
 @app.post("/api/clients")
 @require_auth
@@ -149,14 +183,28 @@ def clients_add():
     data = request.get_json() or {}
     name = (data.get("name") or "").strip()
     if not name:
-        return jsonify({"error": "Name required"}), 400
+        return json_error("Name required", 400)
     row = {
         "name": name,
         "industry": (data.get("industry") or "").strip(),
         "contact": (data.get("contact") or "").strip(),
     }
-    supabase.table("clients").insert(row).execute()
-    log_activity(request.user_email, "created_client", "clients", None, {"name": name})
+    ins = supabase.table("clients").insert(row).execute()
+    cid = ins.data[0]["id"] if ins.data else None
+    log_activity(request.user_email, "created_client", "clients", cid, {"name": name})
+    return jsonify({"ok": True, "id": cid})
+
+@app.put("/api/clients/<int:client_id>")
+@require_auth
+def clients_update(client_id):
+    data = request.get_json() or {}
+    row = {
+        "name": (data.get("name") or "").strip(),
+        "industry": (data.get("industry") or "").strip(),
+        "contact": (data.get("contact") or "").strip(),
+    }
+    supabase.table("clients").update(row).eq("id", client_id).execute()
+    log_activity(request.user_email, "updated_client", "clients", client_id, row)
     return jsonify({"ok": True})
 
 @app.delete("/api/clients/<int:client_id>")
@@ -166,9 +214,78 @@ def clients_delete(client_id):
     log_activity(request.user_email, "deleted_client", "clients", client_id)
     return jsonify({"ok": True})
 
-# -------------------
-# Proposals
-# -------------------
+# ────────────────────────────────────────────────────────────────────────────────
+# Client Folders & Files
+# ────────────────────────────────────────────────────────────────────────────────
+@app.get("/api/clients/<int:client_id>/folders")
+@require_auth
+def client_folders(client_id):
+    res = supabase.table("files").select("folder").eq("client_id", client_id).execute()
+    folders = sorted({(r.get("folder") or "general") for r in (res.data or [])})
+    if not folders:
+        folders = ["general"]
+    return jsonify(folders)
+
+@app.get("/api/clients/<int:client_id>/files")
+@require_auth
+def client_files_list(client_id):
+    folder = request.args.get("folder")
+    q = supabase.table("files").select("*").eq("client_id", client_id).order("id", desc=True)
+    if folder:
+        q = q.eq("folder", folder)
+    res = q.execute()
+    return jsonify(res.data or [])
+
+@app.post("/api/clients/<int:client_id>/files")
+@require_auth
+def client_files_upload(client_id):
+    if "file" not in request.files:
+        return json_error("file missing", 400)
+    folder = (request.form.get("folder") or "general").strip()
+    f = request.files["file"]
+    filename = secure_filename(f.filename or "file.bin")
+    mime = f.mimetype or "application/octet-stream"
+    content = f.read()
+    ts = datetime.datetime.utcnow().strftime("%Y%m%d%H%M%S")
+    storage_path = f"clients/{client_id}/{folder}/{ts}_{secrets.token_hex(6)}_{filename}"
+    supabase.storage.from_("portal").upload(storage_path, content, file_options={"contentType": mime, "upsert": True})
+    ins = supabase.table("files").insert({
+        "client_id": client_id,
+        "project_id": None,
+        "kind": "client_file",
+        "folder": folder,
+        "filename": filename,
+        "storage_path": storage_path,
+        "size_bytes": len(content),
+        "mime": mime,
+        "uploaded_by": request.user_email,
+    }).execute()
+    fid = ins.data[0]["id"] if ins.data else None
+    log_activity(request.user_email, "uploaded_client_file", "files", fid, {"client_id": client_id, "folder": folder, "filename": filename})
+    return jsonify({"ok": True, "id": fid})
+
+@app.delete("/api/files/<int:file_id>")
+@require_auth
+def files_delete(file_id):
+    # Delete DB record only (keep storage for safety)
+    supabase.table("files").delete().eq("id", file_id).execute()
+    log_activity(request.user_email, "deleted_file", "files", file_id)
+    return jsonify({"ok": True})
+
+@app.get("/api/files/download/<int:file_id>")
+@require_auth
+def files_download(file_id):
+    f = supabase.table("files").select("storage_path, filename").eq("id", file_id).single().execute()
+    if not f.data:
+        return json_error("not found", 404)
+    path = f.data["storage_path"]
+    bucket = "templates" if path.startswith("templates/") else "portal"
+    signed = supabase.storage.from_(bucket).create_signed_url(path, 600)
+    return redirect(signed.get("signedURL"))
+
+# ────────────────────────────────────────────────────────────────────────────────
+# Proposals CRUD + File + Global Proposal Assets (folders)
+# ────────────────────────────────────────────────────────────────────────────────
 @app.get("/api/proposals")
 @require_auth
 def proposals_list():
@@ -177,8 +294,8 @@ def proposals_list():
     category = request.args.get("category")
     status = request.args.get("status")
     if client_id: q = q.eq("client_id", int(client_id))
-    if category: q = q.eq("category", category)
-    if status: q = q.eq("status", status)
+    if category:  q = q.eq("category", category)
+    if status:    q = q.eq("status", status)
     res = q.execute()
     return jsonify(res.data or [])
 
@@ -195,20 +312,21 @@ def proposals_add():
     due_date = data.get("due_date")  # YYYY-MM-DD
 
     if not client_id or not title:
-        return jsonify({"error": "client_id and title required"}), 400
+        return json_error("client_id and title required", 400)
 
     file_id = None
-    # Optional file upload (proposal document)
     if "file" in request.files:
         f = request.files["file"]
         filename = secure_filename(f.filename or "file.bin")
-        mime = f.mimetype
+        mime = f.mimetype or "application/octet-stream"
         content = f.read()
         storage_path = f"proposals/{datetime.datetime.utcnow().strftime('%Y%m%d%H%M%S')}_{secrets.token_hex(6)}_{filename}"
         supabase.storage.from_("portal").upload(storage_path, content, file_options={"contentType": mime, "upsert": True})
         r = supabase.table("files").insert({
+            "client_id": int(client_id),
             "project_id": None,
             "kind": "proposal",
+            "folder": "proposals",
             "filename": filename,
             "storage_path": storage_path,
             "size_bytes": len(content),
@@ -239,41 +357,92 @@ def proposals_delete(proposal_id):
     log_activity(request.user_email, "deleted_proposal", "proposals", proposal_id)
     return jsonify({"ok": True})
 
-# Signed download for proposal file
 @app.get("/api/proposals/download/<int:proposal_id>")
 @require_auth
 def proposals_download(proposal_id):
     res = supabase.table("proposals").select("file_id").eq("id", proposal_id).single().execute()
     if not res.data or not res.data.get("file_id"):
-        return jsonify({"error": "no file"}), 404
+        return json_error("no file", 404)
     f = supabase.table("files").select("storage_path, filename").eq("id", res.data["file_id"]).single().execute()
     storage_path = f.data["storage_path"]
     signed = supabase.storage.from_("portal").create_signed_url(storage_path, 600)
     return redirect(signed.get("signedURL"))
 
-# -------------------
-# Templates (upload/list/download) — stored as files.kind = 'template'
-# -------------------
+# Global proposal assets library (folders)
+@app.get("/api/proposals/folders")
+@require_auth
+def proposals_folders():
+    res = supabase.table("files").select("folder").eq("kind","proposal_asset").execute()
+    folders = sorted({(r.get("folder") or "general") for r in (res.data or [])})
+    return jsonify(folders or ["general"])
+
+@app.post("/api/proposals/assets")
+@require_auth
+def proposals_assets_upload():
+    if "file" not in request.files:
+        return json_error("file missing", 400)
+    folder = (request.form.get("folder") or "general").strip()
+    f = request.files["file"]
+    filename = secure_filename(f.filename or "file.bin")
+    mime = f.mimetype or "application/octet-stream"
+    content = f.read()
+    ts = datetime.datetime.utcnow().strftime("%Y%m%d%H%M%S")
+    storage_path = f"proposal_assets/{folder}/{ts}_{secrets.token_hex(6)}_{filename}"
+    supabase.storage.from_("portal").upload(storage_path, content, file_options={"contentType": mime, "upsert": True})
+    ins = supabase.table("files").insert({
+        "client_id": None,
+        "project_id": None,
+        "kind": "proposal_asset",
+        "folder": folder,
+        "filename": filename,
+        "storage_path": storage_path,
+        "size_bytes": len(content),
+        "mime": mime,
+        "uploaded_by": request.user_email,
+    }).execute()
+    fid = ins.data[0]["id"] if ins.data else None
+    log_activity(request.user_email, "uploaded_proposal_asset", "files", fid, {"folder": folder, "filename": filename})
+    return jsonify({"ok": True, "id": fid})
+
+@app.get("/api/proposals/assets")
+@require_auth
+def proposals_assets_list():
+    res = supabase.table("files").select("*").eq("kind","proposal_asset").order("id", desc=True).execute()
+    return jsonify(res.data or [])
+
+# ────────────────────────────────────────────────────────────────────────────────
+# Templates Library (folders supported)
+# ────────────────────────────────────────────────────────────────────────────────
 @app.get("/api/templates")
 @require_auth
 def templates_list():
     res = supabase.table("files").select("*").eq("kind","template").order("id", desc=True).execute()
     return jsonify(res.data or [])
 
+@app.get("/api/templates/folders")
+@require_auth
+def templates_folders():
+    res = supabase.table("files").select("folder").eq("kind","template").execute()
+    folders = sorted({(r.get("folder") or "general") for r in (res.data or [])})
+    return jsonify(folders or ["general"])
+
+# Original flat upload (kept for backward compatibility)
 @app.post("/api/templates/upload")
 @require_auth
 def templates_upload():
     if "file" not in request.files:
-        return jsonify({"error": "file missing"}), 400
+        return json_error("file missing", 400)
     f = request.files["file"]
     filename = secure_filename(f.filename or "file.bin")
-    mime = f.mimetype
+    mime = f.mimetype or "application/octet-stream"
     content = f.read()
     storage_path = f"templates/{datetime.datetime.utcnow().strftime('%Y%m%d%H%M%S')}_{secrets.token_hex(6)}_{filename}"
     supabase.storage.from_("templates").upload(storage_path, content, file_options={"contentType": mime, "upsert": True})
     supabase.table("files").insert({
+        "client_id": None,
         "project_id": None,
         "kind": "template",
+        "folder": "general",
         "filename": filename,
         "storage_path": storage_path,
         "size_bytes": len(content),
@@ -283,18 +452,54 @@ def templates_upload():
     log_activity(request.user_email, "uploaded_template", "files", None, {"filename": filename})
     return jsonify({"ok": True})
 
+# Folder-aware upload
+@app.post("/api/templates/upload2")
+@require_auth
+def templates_upload2():
+    if "file" not in request.files:
+        return json_error("file missing", 400)
+    folder = (request.form.get("folder") or "general").strip()
+    f = request.files["file"]
+    filename = secure_filename(f.filename or "file.bin")
+    mime = f.mimetype or "application/octet-stream"
+    content = f.read()
+    ts = datetime.datetime.utcnow().strftime("%Y%m%d%H%M%S")
+    storage_path = f"templates/{folder}/{ts}_{secrets.token_hex(6)}_{filename}"
+    supabase.storage.from_("templates").upload(storage_path, content, file_options={"contentType": mime, "upsert": True})
+    supabase.table("files").insert({
+        "client_id": None,
+        "project_id": None,
+        "kind": "template",
+        "folder": folder,
+        "filename": filename,
+        "storage_path": storage_path,
+        "size_bytes": len(content),
+        "mime": mime,
+        "uploaded_by": request.user_email,
+    }).execute()
+    log_activity(request.user_email, "uploaded_template", "files", None, {"filename": filename, "folder": folder})
+    return jsonify({"ok": True})
+
+# Folder-aware list (UI tries this first)
+@app.get("/api/templates/list2")
+@require_auth
+def templates_list2():
+    res = supabase.table("files").select("*").eq("kind","template").order("id", desc=True).execute()
+    return jsonify(res.data or [])
+
 @app.get("/api/templates/download/<int:file_id>")
 @require_auth
 def templates_download(file_id):
     f = supabase.table("files").select("storage_path, filename").eq("id", file_id).single().execute()
-    if not f.data: return jsonify({"error":"not found"}),404
+    if not f.data:
+        return json_error("not found", 404)
     storage_path = f.data["storage_path"]
     signed = supabase.storage.from_("templates").create_signed_url(storage_path, 600)
     return redirect(signed.get("signedURL"))
 
-# -------------------
+# ────────────────────────────────────────────────────────────────────────────────
 # Meetings (email reminders)
-# -------------------
+# ────────────────────────────────────────────────────────────────────────────────
 @app.get("/api/meetings")
 @require_auth
 def meetings_list():
@@ -306,13 +511,13 @@ def meetings_list():
 def meetings_add():
     data = request.get_json(silent=True) or {}
     title = (data.get("title") or "").strip()
-    start_at = (data.get("start_at") or "").strip()  # Expect UTC ISO string
+    start_at = (data.get("start_at") or "").strip()  # UTC ISO string
     duration_min = int(data.get("duration_min") or 60)
     location = (data.get("location") or "").strip()
     participants = (data.get("participants") or "").strip()
     remind_before_min = int(data.get("remind_before_min") or 30)
     if not title or not start_at or not participants:
-        return jsonify({"error":"title, start_at, participants required"}),400
+        return json_error("title, start_at, participants required", 400)
     res = supabase.table("meetings").insert({
         "title": title, "start_at": start_at, "duration_min": duration_min,
         "location": location, "participants": participants,
@@ -337,9 +542,9 @@ def email_test():
     ok, msg = send_email(to, "Aegean Tech • Test Email", "<p>This is a test email from the portal.</p>")
     return jsonify({"ok": ok, "msg": msg})
 
-# -------------------
-# UI Tabs Config
-# -------------------
+# ────────────────────────────────────────────────────────────────────────────────
+# UI Tabs Config (optional)
+# ────────────────────────────────────────────────────────────────────────────────
 DEFAULT_TABS = ["Dashboard","Proposals","Templates","Reporting","Clients","Meetings","Settings"]
 
 @app.get("/api/ui/tabs")
@@ -356,13 +561,13 @@ def tabs_set():
     data = request.get_json(silent=True) or {}
     tabs = data.get("tabs")
     if not isinstance(tabs, list) or not tabs:
-        return jsonify({"error": "tabs array required"}), 400
+        return json_error("tabs array required", 400)
     supabase.table("tabs_config").upsert({"user_email": request.user_email, "tabs": tabs}).execute()
     return jsonify({"ok": True})
 
-# -------------------
+# ────────────────────────────────────────────────────────────────────────────────
 # Reporting (KPIs)
-# -------------------
+# ────────────────────────────────────────────────────────────────────────────────
 @app.get("/api/reporting/kpis")
 @require_auth
 def reporting_kpis():
@@ -375,8 +580,10 @@ def reporting_kpis():
     total_value = 0.0
     for p in (props.data or []):
         st[p.get("status","draft")] = st.get(p.get("status","draft"),0)+1
-        try: total_value += float(p.get("value_amount") or 0)
-        except: pass
+        try:
+            total_value += float(p.get("value_amount") or 0)
+        except Exception:
+            pass
     # Next meetings
     now = datetime.datetime.utcnow().isoformat() + "Z"
     upcoming = supabase.table("meetings").select("*").gt("start_at", now).order("start_at", desc=False).limit(5).execute()
@@ -387,33 +594,22 @@ def reporting_kpis():
         "upcoming_meetings": upcoming.data or []
     })
 
-# -------------------
-# Files generic list (for media/deliverables/builds)
-# -------------------
+# ────────────────────────────────────────────────────────────────────────────────
+# Files generic list (by kind)
+# ────────────────────────────────────────────────────────────────────────────────
 @app.get("/api/files")
 @require_auth
 def files_list():
     kind = request.args.get("kind")
     q = supabase.table("files").select("*").order("id", desc=True)
-    if kind: q = q.eq("kind", kind)
+    if kind:
+        q = q.eq("kind", kind)
     res = q.execute()
     return jsonify(res.data or [])
 
-@app.get("/api/files/download/<int:file_id>")
-@require_auth
-def files_download(file_id):
-    f = supabase.table("files").select("storage_path, filename").eq("id", file_id).single().execute()
-    if not f.data: return jsonify({"error":"not found"}),404
-    path = f.data["storage_path"]
-    bucket = "templates" if path.startswith("templates/") else "portal"
-    signed = supabase.storage.from_(bucket).create_signed_url(path, 600)
-    return redirect(signed.get("signedURL"))
-
-# -------------------
-# Background Reminder Worker
-# -------------------
-stop_event = Event()
-
+# ────────────────────────────────────────────────────────────────────────────────
+# Background Reminder Worker (Flask 3 compatible)
+# ────────────────────────────────────────────────────────────────────────────────
 def reminder_worker():
     # Runs every 60s: send reminders when now >= (start_at - remind_before_min)
     while not stop_event.is_set():
@@ -421,24 +617,21 @@ def reminder_worker():
             now_utc = datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc)
             res = supabase.table("meetings").select("*").eq("reminder_sent", False).execute()
             for m in (res.data or []):
+                # tolerate missing Z
                 start = datetime.datetime.fromisoformat(m["start_at"].replace("Z","")).replace(tzinfo=datetime.timezone.utc)
                 remind_before = int(m.get("remind_before_min") or 30)
                 remind_at = start - datetime.timedelta(minutes=remind_before)
                 if now_utc >= remind_at:
-                    # Send email
                     html = f"<p>Reminder: <strong>{m['title']}</strong></p><p>When: {start.strftime('%Y-%m-%d %H:%M UTC')}</p><p>Location: {m.get('location','')}</p>"
                     ics_text = to_ics(m)
-                    ok, msg = send_email(m["participants"], f"Reminder: {m['title']}", html, ics_text=ics_text)
+                    ok, _ = send_email(m["participants"], f"Reminder: {m['title']}", html, ics_text=ics_text)
                     if ok:
                         supabase.table("meetings").update({"reminder_sent": True}).eq("id", m["id"]).execute()
                         log_activity("system","sent_meeting_reminder","meetings", m["id"])
-        except Exception as e:
-            # Avoid crashing the loop
+        except Exception:
+            # don't crash the loop
             pass
         stop_event.wait(60)
-
-# Start the reminder worker once on the first request (Flask-agnostic)
-_worker_started = False
 
 @app.before_request
 def _start_worker_once():
@@ -448,16 +641,34 @@ def _start_worker_once():
         t.start()
         _worker_started = True
 
-# -------------------
-# SPA
-# -------------------
+# ────────────────────────────────────────────────────────────────────────────────
+# Health / Version / Error handling
+# ────────────────────────────────────────────────────────────────────────────────
+@app.get("/api/health")
+def health():
+    return jsonify({"ok": True, "version": APP_VERSION})
+
+@app.errorhandler(413)
+def too_large(e):
+    return json_error("file too large", 413)
+
+@app.errorhandler(Exception)
+def on_error(e):
+    # Return compact error in JSON for easy debugging in UI
+    return json_error("server_error", 500, detail=str(e), trace=getattr(e, "__traceback__", None) and "".join(traceback.format_tb(e.__traceback__)))
+
+# ────────────────────────────────────────────────────────────────────────────────
+# SPA (serve static index.html)
+# ────────────────────────────────────────────────────────────────────────────────
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
 def spa(path):
+    # Single Page App: always return static/index.html
     return app.send_static_file("index.html")
 
+# ────────────────────────────────────────────────────────────────────────────────
+# Run
+# ────────────────────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
-    app.static_folder = "static"
-    # Render sets PORT; default to 5000 locally
-    port = int(os.environ.get("PORT", "5000"))
+    port = int(os.environ.get("PORT", "5000"))  # Render sets PORT at runtime
     app.run(host="0.0.0.0", port=port, debug=False)
